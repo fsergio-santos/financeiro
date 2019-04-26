@@ -1,0 +1,10 @@
+<script id="show-foto-pessoa" type="text/x-handlebars-template">
+	<div class="row js-show-foto-pessoa">
+		<div class="col-md-5 ">
+			<a href="#" class="thumbnail js-remove-show-foto" data-toggle="tooltip" data-placement="top" title="click para remover">
+			   <img th:src="@{/fotos/{{nomeFoto}}}" class="img-responsive"/>
+			</a>
+     	</div>
+		<div class="col-md-5"></div>
+	</div>
+</script>

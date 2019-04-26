@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:data="http://www.thymeleaf.org/extras/data"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<title>Financeiro</title>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/css/font-awesome.min.css}">
+</head>
+<body class="app sidebar-mini rtl">
+	<header th:replace="fragments/header :: cabecalho"> </header>
+	<aside>
+		<nav th:replace="fragments/sidebar :: nav-sidebar"></nav>
+	</aside>
+	<div class="app-content">
+		<section layout:fragment="corpo"></section>
+	</div>
+
+	<footer th:replace="fragments/footer :: rodape"> </footer>
+	<script th:src="@{/js/jquery.js}"></script>
+	<script th:src="@{/js/plugins/jquery.mask.min.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/main.js}"></script>
+	<script th:src="@{/js/plugins/pace.min.js}"></script>
+	<th:block layout:fragment="javascript-extra"></th:block>
+</body>
+</html>

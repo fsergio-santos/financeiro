@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layoutSimples}">
+<head>
+<title>Financeiro</title>
+<meta charset="UTF-8" />
+</head>
+	<th:block layout:fragment="conteudo">
+		<div class="app-title-registrar">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Alterar Senha
+				</h1>
+			</div>
+		</div>
+		<div class="container col-sm-6 offset-sm-3">
+			<div class="tile-registration">
+				<h3 class="tile-title">Registro</h3>
+				<div class="tile-body">
+					<h2 class="text-center">Esqueceu sua senha?</h2>
+					<p class="text-center">Voc&ecirc pode resetar sua senha aqui....</p>
+					<p class="text-center">Informe o seu e-mail....</p>
+					<form class="form-horizontal" th:object="${email}" method="POST"
+						th:action="@{/recuperar/reset-senha}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-12">
+								<div th:replace="fragments/validacao :: validacao"></div>
+								<div th:replace="fragments/alert"></div>
+								<div class="form-group">
+									<label for="email" class="control-label">Email</label> <input
+										type="text" id="email" class="form-control" name="email"
+										th:field="*{email}"
+										th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" />
+									<div id="emailError" class="invalid-feedback">
+										<span th:errors="*{email}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tile-footer">
+							<div class="col-lg-offset-2 col-md-offset-2">
+								<button type="submit" class="btn btn-primary " name="action"
+									value="Salvar" data-toggle="tooltip" data-placement="top"
+									title="Salvar o cadastro de um novo registro">
+									<b>Salvar</b> <span class="fa fa-fw fa-lg fa-check-circle"
+										aria-hidden="true"></span>
+								</button>
+
+								<button type="submit" class="btn btn-secondary " name="action"
+									value="Cancelar" data-toggle="tooltip"
+									formnovalidate="formnovalidate" data-placement="top"
+									title="Cancelar o cadastro de um novo registro">
+									<b>Cancelar</b> <span class="fa fa-fw fa-lg fa-times-circle"
+										aria-hidden="true"></span>
+								</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+		<script th:src="@{/js/jquery.js}"></script> 
+		<script th:src="@{/js/validarSenha.js}"></script>
+	</th:block>
+</body>
+</html>

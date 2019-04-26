@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap-switch.min.css}">
+</head>
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Cadastro de Usuários
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+				<li class="breadcrumb-item"><a href="@{/usuario/pesquisar}">Pesquisa Usuários</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="tile">
+				<h3 class="tile-title">Excluir</h3>
+				<div class="tile-body">
+					<form class="form-horizontal" th:object="${usuario}" method="POST"
+						th:action="@{/usuario/excluir}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div th:replace="fragments/validacao :: validacao"></div>
+								<div th:replace="fragments/alert"></div>
+								<div class="form-group">
+									<label for="nome" class="control-label">Nome</label> <input
+										type="text" id="name" class="form-control" name="name"
+										th:field="*{name}" />
+
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="form-group">
+									<label for="numero" class="control-label">E-mail</label> <input
+										type="text" id="email" class="form-control" name="email"
+										th:field="*{email}" />
+
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+								<div class="form-group">
+									<label for="complemento" class="control-label">Senha</label> <input
+										type="text" id="password" class="form-control" name="password"
+										th:field="*{password}" />
+
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+								<div class="form-group">
+									<label for="cep" class="control-label">Contra Senha</label> <input
+										type="text" id="contraSenha" class="form-control"
+										name="contraSenha" th:field="*{contraSenha}" />
+
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+							<div class="form-group">
+								<label for="ativo" class="control-label">Status</label>
+								<div class="make-switch switch-large">
+									<input type="checkbox" class="js-status" id="ativo"
+										data-off-color="danger" data-on-text="Ativo"
+										data-off-text="Inativo" name="ativo" th:field="*{ativo}" />
+								</div>
+							</div>
+						</div>
+						<input type="hidden" id="id" th:field="*{id}" />
+						<div class="tile-footer">
+
+							<div class="col-lg-offset-2 col-md-offset-2">
+								<button type="submit" class="btn btn-danger " name="action"
+									value="Excluir" data-toggle="tooltip" data-placement="top"
+									title="Excluir o cadastro de um novo registro">
+									<b>Excluir</b> <span class="fa fa-fw fa-lg fa-check-circle"
+										aria-hidden="true"></span>
+								</button>
+
+								<button type="submit" class="btn btn-secondary " name="action"
+									value="Cancelar" data-toggle="tooltip"
+									formnovalidate="formnovalidate" data-placement="top"
+									title="Cancelar o cadastro de um novo registro">
+									<b>Cancelar</b> <span class="fa fa-fw fa-lg fa-times-circle"
+										aria-hidden="true"></span>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/js/bootstrap-switch.min.js}"></script>
+		<script>
+			$('.js-status').bootstrapSwitch();
+	</script>
+	</th:block>
+</body>
+</html>

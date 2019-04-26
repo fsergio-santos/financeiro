@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-th-list"></i>Registros Cadastrados
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb side">
+				<li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+				<li class="breadcrumb-item active"><a th:href="@{/}">Página
+						Principal</a></li>
+			</ul>
+		</div>
+		<br />
+		<div class="tile">
+			<form class="form-inline" role="form" method="GET"
+				th:object="${roleFiltro}">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label for="roleName" class="control-label col-sm-1">Permissão:</label>
+						<input type="text" class="form-control col-sm-8" id="roleName"
+							name="roleName" th:field="*{role_name}"
+							placeholder="Digite uma permissão para pesquisar.">
+						<div class="col-md-1">
+							<button type="submit" class="btn btn-primary">
+								Pesquisar<i class="fa fa-search-plus"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="tile">
+			<h3 class="tile-title">Listagem</h3>
+			<div class="tile-body">
+				<div id="no-more-tables">
+					<table id="table"
+						class="table col-sm-12 table-striped table-bordered table-hover table-collapse cf">
+						<thead class="cf">
+							<tr class="p-3 mb-2 bg-secondary text-white">
+								<th style="width: 20px; font-weight: bold; text-align: left;">
+								  	<a th:href="${pagina.urlOrdenada('id')}"
+										th:remove="${pagina.vazia} ? tag"> <span>Id</span> <span
+										class="dropup" th:remove="${pagina.descendente('id')} ? tag"
+										th:if="${pagina.ordenada('id')}"> <span class="caret"></span>
+										</span>
+								     </a>
+								</th>
+								<th style="width: 400px; font-weight: bold; text-align: left;">
+									<a th:href="${pagina.urlOrdenada('nome')}"
+									    th:remove="${pagina.vazia} ? tag"> <span>Permissão</span> <span
+										class="dropup" th:remove="${pagina.descendente('nome')} ? tag"
+										th:if="${pagina.ordenada('nome')}"> <span class="caret"></span>
+									    </span>
+								    </a>
+								</th>
+								<th style="width: 150px; font-weight: bold; text-align: center;">Ação</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="role :${pagina.conteudo}">
+								<td data-title="Id" class="text-left" th:text="${role.id}"></td>
+								<td data-title="Nome" class="text-left" th:text="${role.nome}"></td>
+								<td data-title="Ação" class="text-center"><a id="btnUpdate"
+									class="btn btn-info btn-sm"
+									title="Alterar dados do grupo selecionado"
+									th:href="@{/role/editar/{id}(id=${role.id})}"> <i
+										class="fa fa-pencil"></i>
+								</a> <a id="btnExclui" class="btn btn-danger btn-sm "
+									title="Excluir dados do grupo selecionado"
+									th:href="@{/role/excluir/{id}(id=${role.id})}"> <i
+										class="fa fa-trash"></i>
+								</a> <a id="btnConsultar" class="btn btn-success btn-sm"
+									title="Consultar registro do grupo selecionado"
+									th:href="@{/role/consultar/{id}(id=${role.id})}"> <i
+										class="fa fa-search-plus"></i>
+								</a></td>
+							</tr>
+							<tr th:if="${pagina.vazia}">
+								<td colspan="10"><b>Nenhum Permissão encontrada</b><i
+									class="fa fa-exclamation-circle " aria-hidden="true"></i></td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+				<div class="box-footer clearfix">
+					<div class="row">
+						<div class="col-xs-12 col-md-5">
+							<div class="pagination">
+								<p>
+									Mostrando <span class="badge"
+										th:text="${pagina.size * (pagina.number-1) + 1}"></span> de <span
+										class="badge"
+										th:text="${pagina.ultima ? pagina.totalElementos : pagina.size * (pagina.number-1)+ pagina.size}"></span>
+									de <span class="badge" th:text="${pagina.totalElementos}"></span>
+									Registros de grupos cadastrados.
+								</p>
+							</div>
+						</div>
+							<div class="col-xs-12 col-md-7" th:if="${not pagina.vazia}">
+								<ul class='pagination pull-right'>
+	                                <li th:class="${pagina.primeira}?'disabled':''">
+	                                    <span th:if='${pagina.primeira}' th:class="page-link" >← Primeira</span>
+	                                    <a th:if='${not pagina.primeira}' th:href='@{${pagina.urlParaPagina(0)}}' th:class="page-link">← Primeira</a>
+	                                </li>
+	                                <li th:class="${pagina.hasPreviousPage}? '' : 'disabled'">
+	                                    <span th:if='${not pagina.hasPreviousPage}' th:class="page-link"><span class="fa fa-chevron-left"></span></span>
+	                                    <a th:if='${pagina.hasPreviousPage}'
+	                                       th:href='@{${pagina.urlParaPagina(pagina.number-2)}}' th:class="page-link"
+	                                       title='Go to previous pagina'><span class="fa fa-chevron-left"></span></a>
+	                                </li>
+	                                <li th:each='item : ${pagina.items}' th:class="${item.current}? 'page-item active' : ''">
+	                                    <span th:if='${item.current}' th:text='${item.number}' th:class="page-link">1</span>
+	                                    <a th:if='${not item.current}'  th:class="page-link"
+	                                       th:href='@{${pagina.urlParaPagina(item.number-1)}}'><span
+	                                            th:text='${item.number}' >1</span></a>
+	                                </li>
+	                                <li th:class="${pagina.hasNextPage}? '' : 'disabled'">
+	                                    <span th:if='${not pagina.hasNextPage}' th:class="page-link"><span class="fa fa-chevron-right"></span></span>
+	                                    <a th:if='${pagina.hasNextPage}' th:class="page-link"
+	                                       th:href='@{${pagina.urlParaPagina(pagina.number+1)}}'
+	                                       title='Go to next pagina'><span class="fa fa-chevron-right"></span></a>
+	                                </li>
+	                                <li th:class="${pagina.ultima}? 'disabled' : ''">
+	                                    <span th:if='${pagina.ultima}' th:class="page-link">Última →</span>
+	                                    <a th:if='${not pagina.ultima}' th:class="page-link"
+	                                       th:href='@{${pagina.urlParaPagina(pagina.total-1)}}'>Última →</a>
+	                                </li>
+	                            </ul>
+							</div>>
+					</div>
+				</div>
+			</div>
+
+			<a class="btn btn-success " data-toggle="tooltip"
+				data-placement="top" title="Cadastrar um novo Grupo"
+				th:href="@{/role/cadastrar}"><b>Incluir</b> <i
+				class="fa fa-plus-circle"></i> </a>
+		</div>
+	</section>
+
+</body>
+</html>

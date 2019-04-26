@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Cadastro de Grupos
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+				<li class="breadcrumb-item"><a th:href="@{/role/pesquisar}">Pesquisa Grupos</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="tile">
+				<h3 class="tile-title">Registro</h3>
+				<div class="tile-body">
+					<form class="form-horizontal" th:object="${grupo}" method="POST"
+						th:action="${grupo.id == null} ? @{/role/salvar} : @{/role/editar}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div th:replace="fragments/validacao :: validacao"></div>
+								<div th:replace="fragments/alert"></div>
+								<div class="form-group">
+									<label for="nome" class="control-label">Nome</label> <input
+										type="text" id="nome" class="form-control" name="nome"
+										th:field="*{nome}"
+										th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'" />
+									<div class="invalid-feedback">
+										<span th:errors="*{nome}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" id="id" th:field="*{id}" />
+						<div class="tile-footer">
+
+							<div class="col-lg-offset-2 col-md-offset-2">
+								<button type="submit" class="btn btn-primary " name="action"
+									value="Salvar" data-toggle="tooltip" data-placement="top"
+									title="Salvar o cadastro de um novo registro">
+									<b>Salvar</b> <span class="fa fa-fw fa-lg fa-check-circle"
+										aria-hidden="true"></span>
+								</button>
+
+								<button type="submit" class="btn btn-secondary " name="action"
+									value="Cancelar" data-toggle="tooltip"
+									formnovalidate="formnovalidate" data-placement="top"
+									title="Cancelar o cadastro de um novo registro">
+									<b>Cancelar</b> <span class="fa fa-fw fa-lg fa-times-circle"
+										aria-hidden="true"></span>
+								</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

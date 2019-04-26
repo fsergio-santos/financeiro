@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Cadastro de Permissões
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+				<li class="breadcrumb-item"><a href="@{/permmissao/pesquisar}">Pesquisa
+						Permissões</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="tile">
+				<h3 class="tile-title">Excluir</h3>
+				<div class="tile-body">
+					<form class="form-horizontal" th:object="${role}" method="POST"
+						th:action="@{/permissao/excluir}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div th:replace="fragments/alert"></div>
+								<div class="form-group">
+									<label for="role" class="control-label">Nome</label> <input
+										type="text" id="role" class="form-control" name="role"
+										th:field="*{nome}" />
+								</div>
+							</div>
+						</div>
+
+						<input type="hidden" id="id" th:field="*{id}" />
+						<div class="tile-footer">
+							<button type="submit" class="btn btn-danger " name="action"
+								value="Excluir" data-toggle="tooltip" data-placement="top"
+								title="Excluir o cadastro de um novo registro">
+								<b>Excluir</b> <span class="fa fa-fw fa-lg fa-check-circle"
+									aria-hidden="true"></span>
+							</button>
+
+							<button type="submit" class="btn btn-secondary " name="action"
+								value="Cancelar" data-toggle="tooltip"
+								formnovalidate="formnovalidate" data-placement="top"
+								title="Cancelar o cadastro de um novo registro">
+								<b>Cancelar</b> <span class="fa fa-fw fa-lg fa-times-circle"
+									aria-hidden="true"></span>
+							</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

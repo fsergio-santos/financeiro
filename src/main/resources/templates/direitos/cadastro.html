@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-switch.min.css}">
+</head>
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Cadastro de Permissões por Grupos
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+				<li class="breadcrumb-item"><a th:href="@{/direitos/pesquisar}">Pesquisa Grupos Permissões</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="tile">
+				<h3 class="tile-title">Registro</h3>
+				<div class="tile-body">
+					<form class="form-horizontal" 
+					      th:object="${rolePermissao}" method="POST"
+						  th:action="${rolePermissao.id == null} ? @{/direitos/salvar} : @{/direitos/editar}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div th:replace="fragments/validacao :: validacao"></div>
+								<div th:replace="fragments/alert"></div>
+								<div class="form-group">
+									<label for="roleid" class="control-label">Grupo</label>
+									<select id="roleid" class="form-control" th:field="*{roleId}"> 
+										<option value="">Selecione o grupo de usuários</option>
+										<option th:each="role : ${roles}"
+												th:value="${role.id}" th:text="${role.nome}"
+												th:classappend="${#fields.hasErrors('roleId')} ? 'is-invalid'" >
+										</option>
+									</select>
+									<div class="invalid-feedback">
+										<span th:errors="*{roleId}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="form-group">
+									<label for="permissaoId" class="control-label">Permissão</label>
+									<select id="permissaoId" class="form-control" th:field="*{permissaoId}"> 
+										<option value="">Selecione as permissões para o grupo</option>
+										<option th:each="permissao : ${permissoes}"
+												th:value="${permissao.id}" th:text="${permissao.nome}"
+												th:classappend="${#fields.hasErrors('permissaoId')} ? 'is-invalid'" >
+										</option>
+									</select>
+									<div class="invalid-feedback">
+										<span th:errors="*{permissaoId}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="form-group">
+									<label for="escopoId" class="control-label">Escopo</label>
+									<select id="escopoId" class="form-control" th:field="*{scopeId}"> 
+										<option value="">Selecione o escopo para as permissões</option>
+										<option th:each="escopo : ${scopes}"
+												th:value="${escopo.id}" th:text="${escopo.nome}"
+												th:classappend="${#fields.hasErrors('scopeId')} ? 'is-invalid'" >
+										</option>
+									</select>
+									<div class="invalid-feedback">
+										<span th:errors="*{scopeId}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+				   			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+									<div class="form-group">
+									<label for="dataCadastro" class="control-label">Data
+										Cadastro</label> <input type="date" id="dataCadastro"
+										class="form-control" placeholder="99/99/9999"
+										name="dataCadastro" th:field="*{dataCadastro}"
+										th:classappend="${#fields.hasErrors('dataCadastro')} ? 'is-invalid'" />
+									<div class="invalid-feedback">
+										<span th:errors="*{dataCadastro}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<fieldset>
+							<legend>Direitos de Acesso</legend>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+									<div class="form-group "
+										th:classappend="${#fields.hasErrors('right_read')} ? has-error">
+										<label for="right_read" class="control-label">Leitura</label>
+										<div class="make-switch switch-large">
+											<input type="checkbox" class="js-status" id="right_read"
+												data-off-color="danger"
+												data-on-text="<i class='fa fa-check'></i>"
+												data-off-text="<i class='fa fa-times'></i>"
+												th:field="*{right_read}" />
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+									<div class="form-group"
+										th:classappend="${#fields.hasErrors('right_write')} ? has-error">
+										<label for="right_write" class="control-label">Escrita</label>
+										<div class="make-switch switch-large">
+											<input type="checkbox" class="js-status" id="right_write"
+												data-off-color="danger"
+												data-on-text="<i class='fa fa-check'></i>"
+												data-off-text="<i class='fa fa-times'></i>"
+												th:field="*{right_write}" />
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+									<div class="form-group"
+										th:classappend="${#fields.hasErrors('right_delete')} ? has-error">
+										<label for="right_delete" class="control-label">Excluir</label>
+										<div class="make-switch switch-large">
+											<input type="checkbox" class="js-status" id="right_delete"
+												data-off-color="danger"
+												data-on-text="<i class='fa fa-check'></i>"
+												data-off-text="<i class='fa fa-times'></i>"
+												th:field="*{right_delete}" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<input type="hidden" id="id" th:field="*{id}" />
+						<div class="tile-footer">
+
+							<div class="col-lg-offset-2 col-md-offset-2">
+								<button type="submit" class="btn btn-primary " name="action"
+									value="salvar" data-toggle="tooltip" data-placement="top"
+									title="Salvar o cadastro de um novo registro">
+									<b>Salvar</b> <span class="fa fa-fw fa-lg fa-check-circle"
+										aria-hidden="true"></span>
+								</button>
+
+								<button type="submit" class="btn btn-secondary " name="action"
+									value="cancelar" data-toggle="tooltip"
+									formnovalidate="formnovalidate" data-placement="top"
+									title="Cancelar o cadastro de um novo registro">
+									<b>Cancelar</b> <span class="fa fa-fw fa-lg fa-times-circle"
+										aria-hidden="true"></span>
+								</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block layout:fragment="javascript-extra">
+  		<script th:src="@{/js/bootstrap-switch.min.js}"></script>
+		<script>
+			$('.js-status').bootstrapSwitch();
+	    </script>
+	    <script>
+	        $('#escopoId').click(function(){
+				var opcao = $("#escopoId option:selected").val();
+				if (opcao == 'LEITURA'){
+					$('#right_read').bootstrapSwitch('state',true); 
+					$('#right_read').bootstrapSwitch('readonly',true);
+					$('#right_write').bootstrapSwitch('readonly',true);
+					$('#right_delete').bootstrapSwitch('readonly',true);
+				}
+				if (opcao == 'ESCRITA'){
+					$('#right_write').bootstrapSwitch('state',true);
+					$('#right_read').bootstrapSwitch('readonly',true);
+					$('#right_write').bootstrapSwitch('readonly',true);
+					$('#right_delete').bootstrapSwitch('readonly',true);
+				}
+				if (opcao == 'EXCLUSAO'){
+					$('#right_delete').bootstrapSwitch('state',true);
+					$('#right_read').bootstrapSwitch('readonly',true);
+					$('#right_write').bootstrapSwitch('readonly',true);
+					$('#right_delete').bootstrapSwitch('readonly',true);
+				}
+				if (opcao == 'TODOS'){
+					$('#right_read').bootstrapSwitch('state',true); 
+					$('#right_write').bootstrapSwitch('state',true);
+					$('#right_delete').bootstrapSwitch('state',true);
+					$('#right_read').bootstrapSwitch('readonly',true);
+					$('#right_write').bootstrapSwitch('readonly',true);
+					$('#right_delete').bootstrapSwitch('readonly',true);
+				}
+			});
+	    </script>
+	</th:block>
+</body>
+</html>

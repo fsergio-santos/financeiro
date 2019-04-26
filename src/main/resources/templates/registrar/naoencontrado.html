@@ -1,0 +1,52 @@
+<html lang="pt" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="'layout/LayoutSimples'">
+<head>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<th:block layout:fragment="conteudo">
+	<div class="container">
+		<h1 class="alert alert-danger" th:text="${param.message[0]}">error</h1>
+		<br /> <a class="btn btn-default" th:href="@{/registration.html}">Faça o Registro para acessar novamente o sistema</a>
+
+		<div th:if="${param.expired[0]}">
+			<br />
+			<h1 >Renove confirmação de Registro </h1>
+			<button onclick="resendToken()">Reenviar</button>
+
+
+			<th:block layout:fragment="javascript-extra">
+				<script th:src="@{/js/jquery/jquery.js}"></script>
+				<script th:inline="javascript">
+				/*<![CDATA[*/
+						var serverContext = [[@{/}]];
+						
+				        var token = $('#_csrf').attr('content');
+						var header = $('#_csrf_header').attr('content');
+						
+						function resendToken(){
+							var token = [[${param.token}]];
+						    $.ajax({
+						         type: "GET",	 
+						         url:serverContext + "registro/resendRegistrationToken?token="+token,
+						         beforeSend: function(xhr) {
+	                                xhr.setRequestHeader(header, token);
+	                             },
+	                             success : function(result) {
+	            		            window.location.href = serverContext +"login?message=" + data.message;
+	                             },
+	                             error : function(data) {
+						            window.location.href = serverContext + "login?message=" + data.responseJSON.message;
+	                             }   
+						    });
+						}
+		
+				/*]]>*/
+		</script>
+		</div>
+	</div>
+</th:block>
+</th:block>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-switch.min.css}">
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Cadastro de Permissões por Grupos
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+				<li class="breadcrumb-item"><a th:href="@{/direitos/pesquisar}">Pesquisa Permissões dos Grupos</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="tile">
+				<h3 class="tile-title">Consulta</h3>
+				<div class="tile-body">
+					<form class="form-horizontal" 
+					      th:object="${rolePermissao}" method="POST"
+						  th:action="@{/direitos/consultar}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="form-group">
+									<label for="roleid" class="control-label">Grupo</label>
+									<input id="roleid" class="form-control" th:field="*{roleId.nome}"/> 
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="form-group">
+									<label for="permissaoId" class="control-label">Permissão</label>
+									<input id="permissaoId" class="form-control" th:field="*{permissaoId.nome}"/> 
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div class="form-group">
+									<label for="escopoId" class="control-label">Escopo</label>
+									<input id="escopoId" class="form-control" th:field="*{scopeId.nome}"/> 
+								</div>
+							</div>
+						</div>
+						<div class="row">
+				   			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
+									<div class="form-group">
+									<label for="dataCadastro" class="control-label">Data
+										Cadastro</label> <input type="date" id="dataCadastro"
+										class="form-control" placeholder="99/99/9999"
+										name="dataCadastro" th:field="*{dataCadastro}"/>
+								</div>
+							</div>
+						</div>
+						<fieldset>
+							<legend>Direitos de Acesso</legend>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+									<div class="form-group ">
+										<label for="right_read" class="control-label">Leitura</label>
+										<div class="make-switch switch-large">
+											<input type="checkbox" class="js-status" id="right_read"
+												data-off-color="danger"
+												data-on-text="<i class='fa fa-check'></i>"
+												data-off-text="<i class='fa fa-times'></i>"
+												th:field="*{right_read}" />
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+									<div class="form-group">
+										<label for="right_write" class="control-label">Escrita</label>
+										<div class="make-switch switch-large">
+											<input type="checkbox" class="js-status" id="right_write"
+												data-off-color="danger"
+												data-on-text="<i class='fa fa-check'></i>"
+												data-off-text="<i class='fa fa-times'></i>"
+												th:field="*{right_write}" />
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+									<div class="form-group">
+										<label for="right_delete" class="control-label">Excluir</label>
+										<div class="make-switch switch-large">
+											<input type="checkbox" class="js-status" id="right_delete"
+												data-off-color="danger"
+												data-on-text="<i class='fa fa-check'></i>"
+												data-off-text="<i class='fa fa-times'></i>"
+												th:field="*{right_delete}" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<input type="hidden" id="id" th:field="*{id}" />
+						<div class="tile-footer">
+							<div class="col-lg-offset-2 col-md-offset-2">
+								<button type="submit" class="btn btn-secondary " name="action"
+									value="cancelar" data-toggle="tooltip"
+									formnovalidate="formnovalidate" data-placement="top"
+									title="Cancelar a exclusão do registro">
+									<b>Cancelar</b> <span class="fa fa-fw fa-lg fa-times-circle"
+										aria-hidden="true"></span>
+								</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block layout:fragment="javascript-extra">
+  		<script th:src="@{/js/bootstrap-switch.min.js}"></script>
+		<script>
+			$('.js-status').bootstrapSwitch();
+	    </script>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <head>
+    <title>Página de Erros</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}">
+  </head>
+  <body class="app sidebar-mini rtl">
+    <header class="app-header"><a class="app-header__logo" ></a>
+      <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+    </header>
+    <div class="app-content">
+      <div class="page-error tile">
+		<div>
+		<h1 class="h3 mb-3 font-weight-normal">
+			<i class="fa fa-exclamation-triangle"></i> 
+			<span><p>Desculpe, você não está autorizado a acessar a página que solicitou.</p>
+			<p>Se você acha que isso é um engano, entre em contato com a gente.</p></span>
+		</h1>
+		<div>
+			<span th:text="${message}"></span><br/><br/>
+			<a class="btn btn-primary" type="button" href="javascript:history.back()">Voltar a página anterior</a>
+		</div>
+	</div>
+      </div>
+    </div>
+	<script th:src="@{/js/jquery.js}"></script>
+	<script th:src="@{/js/popper.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/plugins/pace.min.js}"></script>
+  </body>
+</html>

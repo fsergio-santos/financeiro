@@ -17,6 +17,7 @@ public abstract class Usuario_ {
 	public static volatile SingularAttribute<Usuario, String> foto;
 	public static volatile SingularAttribute<Usuario, Date> dataVencimentoSenha;
 	public static volatile ListAttribute<Usuario, Role> roles;
+	public static volatile SingularAttribute<Usuario, String> nome;
 	public static volatile ListAttribute<Usuario, UsuarioSenha> usuarioSenhas;
 	public static volatile SingularAttribute<Usuario, Integer> id;
 	public static volatile SingularAttribute<Usuario, String> contentType;
@@ -29,6 +30,7 @@ public abstract class Usuario_ {
 	public static final String FOTO = "foto";
 	public static final String DATA_VENCIMENTO_SENHA = "dataVencimentoSenha";
 	public static final String ROLES = "roles";
+	public static final String NOME = "nome";
 	public static final String USUARIO_SENHAS = "usuarioSenhas";
 	public static final String ID = "id";
 	public static final String CONTENT_TYPE = "contentType";

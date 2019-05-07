@@ -2,7 +2,6 @@ package com.financeiro.service;
 
 
 import com.financeiro.model.security.ResetarSenhaToken;
-import com.financeiro.model.security.ValidarTokenUsuario;
 import com.financeiro.model.security.Usuario;
 
 
@@ -14,9 +13,9 @@ public interface RegistrarUsuarioService {
 	
     void criaVerificacaoTokenParaUsuario(Usuario usuario, String token);
     
-	ValidarTokenUsuario pegarVerificacaoToken(String VerificationToken);
+    ResetarSenhaToken pegarVerificacaoToken(String VerificationToken);
 
-    ValidarTokenUsuario gerarNovaValidacaoParaToken(String token);
+    ResetarSenhaToken gerarNovaValidacaoParaToken(String token);
 
     void criarNovaSenhaComTokenParaUsuario(Usuario usuario, String token);
 

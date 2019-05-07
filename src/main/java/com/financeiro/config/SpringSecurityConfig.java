@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
 import com.financeiro.security.AuthenticationSuccessHandlerImpl;
 import com.financeiro.security.UserDetailsServiceImpl;
@@ -89,7 +90,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			 	.maximumSessions(1).sessionRegistry(sessionRegistry()).and()
 		        .sessionFixation().none()
 			    .and()
-             .csrf();
+             .csrf()
+             	.and()
+             .cors();
     }
     
 
@@ -116,6 +119,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }*/
-    
-        
+
  }

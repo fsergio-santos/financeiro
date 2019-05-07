@@ -16,12 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.financeiro.model.security.ResetarSenhaToken;
-import com.financeiro.model.security.ValidarTokenUsuario;
 import com.financeiro.model.security.Usuario;
 import com.financeiro.repository.PasswordResetTokenRepository;
 import com.financeiro.repository.RegistrarUsuarioRepository;
 import com.financeiro.repository.UserRepository;
-import com.financeiro.repository.VerificationTokenRepository;
+import com.financeiro.repository.ResetarSenhaTokenRepository;
 import com.financeiro.service.RegistrarUsuarioService;
 import com.financeiro.service.exception.EmailUsuarioCadastradoException;
 import com.financeiro.util.data.DataSistema;
@@ -48,7 +47,7 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private VerificationTokenRepository verificationTokenRepository;
+	private ResetarSenhaTokenRepository verificationTokenRepository;
 	
 	@Autowired
 	private PasswordResetTokenRepository passwordResetTokenRepository;
@@ -66,7 +65,7 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	@Override
 	@Transactional(readOnly=true)
 	public Usuario getUsuario(String verificationToken) {
-		final ValidarTokenUsuario token = verificationTokenRepository.findByToken(verificationToken);
+		final ResetarSenhaToken token = verificationTokenRepository.findByToken(verificationToken);
 		if (token != null) {
 			return token.getUsuario();
 		}
@@ -75,19 +74,19 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 
 	@Override
 	public void criaVerificacaoTokenParaUsuario(Usuario usuario, String token) {
-        final ValidarTokenUsuario myToken = new ValidarTokenUsuario(token, usuario);
+        final ResetarSenhaToken myToken = new ResetarSenhaToken(token, usuario);
         verificationTokenRepository.save(myToken);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public ValidarTokenUsuario pegarVerificacaoToken(String TokenVerification) {
+	public ResetarSenhaToken pegarVerificacaoToken(String TokenVerification) {
     	 return verificationTokenRepository.findByToken(TokenVerification);
 	}
 
 	@Override
-	public ValidarTokenUsuario gerarNovaValidacaoParaToken(String token) {
-        ValidarTokenUsuario vToken = verificationTokenRepository.findByToken(token);
+	public ResetarSenhaToken gerarNovaValidacaoParaToken(String token) {
+		ResetarSenhaToken vToken = verificationTokenRepository.findByToken(token);
         vToken.updateToken(UUID.randomUUID().toString());
         vToken = verificationTokenRepository.save(vToken);
         return vToken;
@@ -128,13 +127,13 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	@Override
 	public String verificarValidacaoDoToken(String token) {
 		
-		final ValidarTokenUsuario verificationToken = verificationTokenRepository.findByToken(token);
+		final ResetarSenhaToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null) {
             return TOKEN_INVALIDO;
         }
         final Usuario usuario = verificationToken.getUsuario();
         final Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+        if ((verificationToken.getDataExpiracao().getTime() - cal.getTime().getTime()) <= 0) {
         	verificationTokenRepository.delete(verificationToken);
             return TOKEN_EXPIRADO;
         }

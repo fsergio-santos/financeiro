@@ -57,7 +57,7 @@
 									</span>
 								</a>
 								</th>
-								<th style="width: 400px; font-weight: bold; text-align: left;">
+								<th style="width: 200px; font-weight: bold; text-align: left;">
 									<a th:href="${pagina.urlOrdenada('username')}"
 									th:remove="${pagina.vazia} ? tag"> <span>Nome</span> <span
 										class="dropup"
@@ -69,6 +69,7 @@
 								</th>
 								<th style="width: 50px; font-weight: bold; text-align: center;">Grupo</th>
 								<th style="width: 50px; font-weight: bold; text-align: center;">Status</th>
+								<th style="width: 50px; font-weight: bold; text-align: center;">Usuário</th>
 								<th style="width: 150px; font-weight: bold; text-align: center;">Ação</th>
 							</tr>
 						</thead>
@@ -85,6 +86,9 @@
 									</th:block> <th:block th:if="${not usuario.ativo}">
 										<span class="badge badge-danger">Inativo</span>
 									</th:block></td>
+								<td data-title="Foto" class="text-center">
+									<img th:src="@{/fotos/thumbnail.{foto}(foto=${usuario.fotoOuMock})}" class="img-responsive"/>
+								</td> 
 								<td data-title="Ação" class="text-center"><a id="btnUpdate"
 									class="btn btn-info btn-sm"
 									title="Alterar dados da usuário selecionada"

@@ -57,7 +57,7 @@ public class RecuperarSenhaController {
         } else {
 	        final String token = UUID.randomUUID().toString();
             registrarUsuarioService.criarNovaSenhaComTokenParaUsuario(usuario, token);
-            criarMensagemEmail.constructResetTokenEmail(criarMensagemEmail.getAppUrl(request), token, usuario);
+            criarMensagemEmail.criarRenvioTokenPorEmail(criarMensagemEmail.getAppUrl(request), token, usuario);
 	        attr.addAttribute("success", "Enviamos link no seu e-mail para fazer a troca da senha");
         }
         return new ModelAndView("/recuperar/email");

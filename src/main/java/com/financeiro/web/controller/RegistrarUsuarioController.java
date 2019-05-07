@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.financeiro.model.security.ValidarTokenUsuario;
+import com.financeiro.model.security.ResetarSenhaToken;
 import com.financeiro.model.security.Usuario;
 import com.financeiro.service.RegistrarUsuarioService;
 import com.financeiro.service.exception.EmailUsuarioCadastradoException;
@@ -85,9 +85,9 @@ public class RegistrarUsuarioController {
 	
     @RequestMapping(value = "/enviar-token-de-registro", method = RequestMethod.GET)
     public ModelAndView re_enviarRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken, RedirectAttributes attr) {
-        ValidarTokenUsuario token = registrarUsuarioService.gerarNovaValidacaoParaToken(existingToken);
+    	ResetarSenhaToken token = registrarUsuarioService.gerarNovaValidacaoParaToken(existingToken);
         Usuario usuario = registrarUsuarioService.getUsuario(token.getToken());
-        criarMensagemEmail.constructResendVerificationTokenEmail(criarMensagemEmail.getAppUrl(request), token, usuario);
+        criarMensagemEmail.ReenviarEmailTokenConfirmado(criarMensagemEmail.getAppUrl(request), token, usuario);
         attr.addFlashAttribute("success","Enviamos mensagem para seu e-mail com link para realizar um novo registro ");
         return registrarUsuario(usuario);
     }

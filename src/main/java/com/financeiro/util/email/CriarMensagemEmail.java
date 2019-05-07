@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.financeiro.model.security.ValidarTokenUsuario;
+import com.financeiro.model.security.ResetarSenhaToken;
 import com.financeiro.model.security.Usuario;
 import com.financeiro.service.EmailService;
 
@@ -15,19 +15,19 @@ public class CriarMensagemEmail {
 	@Autowired
 	private EmailService emailService;
 	
-	public void constructResendVerificationTokenEmail(String contextPath, final ValidarTokenUsuario newToken, final Usuario usuario) {
-        final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
-        final String message = "Use o link em seu e-mail para realizar um novo registro ";
-        constructEmail("Fazer um novo registro", message + " \r\n" + confirmationUrl, usuario);
+	public void ReenviarEmailTokenConfirmado(String contextPath, final ResetarSenhaToken newToken, final Usuario usuario) {
+        final String confirmarUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
+        final String mensagem = "Use o link em seu e-mail para realizar um novo registro ";
+        criarEmail("Fazer um novo registro", mensagem + " \r\n" + confirmarUrl, usuario);
     }
 	
-	public void constructResetTokenEmail(final String contextPath, final String token, final Usuario usuario) {
+	public void criarRenvioTokenPorEmail(final String contextPath, final String token, final Usuario usuario) {
         final String url = contextPath + "/registro/changePassword?id=" + usuario.getId() + "&token=" + token;
-        final String message = " Enviamos mensagem no seu e-mail para você trocar sua senha atravês deste link"+" \r\n" + url;
-        constructEmail("Modifique sua senha", message  , usuario);
+        final String mensagem = " Enviamos mensagem no seu e-mail para você trocar sua senha atravês deste link"+" \r\n" + url;
+        criarEmail("Modifique sua senha", mensagem  , usuario);
     }
     
-    public void constructEmail(String subject, String body, Usuario usuario) {
+    public void criarEmail(String subject, String body, Usuario usuario) {
         emailService.sendSimpleMessage(usuario.getEmail(), subject, body, "fsergio.santos@gmail.com");
     }
     

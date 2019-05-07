@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -48,6 +49,7 @@ public class Usuario implements UserDetails, Serializable{
     private String email;
     private String password;
     private String contraSenha;
+    private String nome;
     private String username;
     private LocalDate lastLogin;
     private Date dataVencimentoSenha;
@@ -60,11 +62,12 @@ public class Usuario implements UserDetails, Serializable{
     public Usuario() {
 	}
     
-	public Usuario(int id, String email, String password, String name, boolean ativo, Set<Role> roles) {
+	public Usuario(int id, String email, String password, String username, String name, boolean ativo, Set<Role> roles) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
-		this.username = name;
+		this.username = username;
+		this.nome = name;
 		this.ativo = ativo;
 	}
 	
@@ -113,6 +116,18 @@ public class Usuario implements UserDetails, Serializable{
 	
 	public void setLastLogin(LocalDate lastLogin) {
 		this.lastLogin = lastLogin;
+	}
+	
+	
+	@Column(name = "user_nome",length=100, nullable=true)
+    @NotNull(message = "Insira um nome válido.")
+    @NotEmpty(message = "Insira um nome válido.")
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	@Transient
@@ -183,8 +198,8 @@ public class Usuario implements UserDetails, Serializable{
 	}
 	
 	@Override
-	@Column(name = "user_name",length=100, nullable=false)
-    @NotEmpty(message = "Insira um nome válido.")
+	@Column(name = "user_name",length=100, nullable=false, unique=true)
+    @NotEmpty(message = "Insira um nome de usuário válido.")
 	public String getUsername() {
 		return username;
 	}
@@ -251,7 +266,11 @@ public class Usuario implements UserDetails, Serializable{
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + ", name=" + username + ", active=" + ativo +  "]";
+		return "Usuario [id=" + id + ", email=" + email + ", password=" + password + ", contraSenha=" + contraSenha
+				+ ", nome=" + nome + ", username=" + username + ", lastLogin=" + lastLogin + ", dataVencimentoSenha="
+				+ dataVencimentoSenha + ", ativo=" + ativo + ", foto=" + foto + ", contentType=" + contentType + "]";
 	}
+
+	
 
 }

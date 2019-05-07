@@ -3,6 +3,7 @@ package com.financeiro.model.security;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -10,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,12 +30,9 @@ public class RolePermissao implements Serializable {
 	private Role roleId;
 	private Escopo scopeId;
 	
-	private LocalDate dataCadastro;
+	private Date dataCadastro;
 	
-	private boolean right_read   = false;
-	private boolean right_write  = false;
-	private boolean right_delete = false;
-		
+			
 	public RolePermissao() {
 		super();
 	}
@@ -40,18 +40,13 @@ public class RolePermissao implements Serializable {
 	public RolePermissao(RolePermissaoId id, 
 			             Permissao permissaoId, 
 			             Role roleId,  
-			             Escopo scopeId,
-			             boolean right_read, 
-			             boolean right_write,
-			             boolean right_delete) {
+			             Escopo scopeId){
 		super();
 		this.id = id;
 		this.permissaoId = permissaoId;
 		this.roleId = roleId;
 		this.scopeId = scopeId;
-		this.right_read = right_read;
-		this.right_write = right_write;
-		this.right_delete = right_delete;
+
 
 	}
 	
@@ -93,40 +88,17 @@ public class RolePermissao implements Serializable {
 
 	@NotNull(message="A data de cadastro deve ser informada.")
 	@DateTimeFormat(iso = ISO.DATE, pattern = "")
+	@Temporal(TemporalType.DATE)
 	@Column(name="data_cadastro", nullable=false, columnDefinition = "DATE")
-	public LocalDate getDataCadastro() {
+	public Date getDataCadastro() {
 		return dataCadastro;
 	}
 
-	public void setDataCadastro(LocalDate dataCadastro) {
+	public void setDataCadastro(Date dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
 
-	@Column(nullable=false)
-	public boolean isRight_read() {
-		return right_read;
-	}
-	public void setRight_read(boolean right_read) {
-		this.right_read = right_read;
-	}
-	
-	@Column(nullable=false)
-	public boolean isRight_write() {
-		return right_write;
-	}
-	public void setRight_write(boolean right_write) {
-		this.right_write = right_write;
-	}
-	
-	@Column(nullable=false)
-	public boolean isRight_delete() {
-		return right_delete;
-	}
-	public void setRight_delete(boolean right_delete) {
-		this.right_delete = right_delete;
-	}
-	
-	
+		
 
 	@Override
 	public int hashCode() {
@@ -156,8 +128,7 @@ public class RolePermissao implements Serializable {
 	@Override
 	public String toString() {
 		return "RolePermissao [id=" + id + ", permissaoId=" + permissaoId.getId() + ", roleId=" + roleId.getId() + ", scopeId="
-				+ scopeId + ", dataCadastro=" + dataCadastro + ", right_read=" + right_read + ", right_write="
-				+ right_write + ", right_delete=" + right_delete + "]";
+				+ scopeId + ", dataCadastro=" + dataCadastro + "]";
 	}
 	
 	

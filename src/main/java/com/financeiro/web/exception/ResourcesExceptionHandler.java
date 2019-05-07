@@ -21,7 +21,7 @@ import com.financeiro.web.error.MessageErrors;
 @ControllerAdvice
 public class ResourcesExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler({ EmptyResultDataAccessException.class })
+	/*@ExceptionHandler({ EmptyResultDataAccessException.class })
 	public ResponseEntity<Object> idInvalido(IdNaoValidoServiceException ex, WebRequest request) {
 
 		return handleExceptionInternal(ex,
@@ -88,7 +88,7 @@ public class ResourcesExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private String getHttpMethod(WebRequest request) {
 		return ((ServletWebRequest) request).getRequest().getMethod();
-	}
+	}*/
 
 	@ModelAttribute("usuario_logado")
 	public UsuarioSistema getCurrentUser(@AuthenticationPrincipal UsuarioSistema usuario_logado) {

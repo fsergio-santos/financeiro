@@ -56,7 +56,7 @@ public class UsuarioSenhaServiceImp implements UsuarioSenhaService {
 		usuarioSenha.getUsuario().setPassword(password.getNewPassword());
 		usuarioSenha.getUsuario().setDataVencimentoSenha(dataSistema.somaData(new Date()));
      	usuarioSenhaRepository.saveAndFlush(usuarioSenha);
-		registrarUsuarioService.changeUsuarioPassword(usuario_logado.getUsuario(), password.getNewPassword());
+		registrarUsuarioService.alterarUsuarioSenha(usuario_logado.getUsuario(), password.getNewPassword());
 	    return usuarioSenha; 	
 	}
 	

@@ -75,7 +75,7 @@ public class SpringJpaConfig {
 		props.setProperty("hibernate.current_session_context_class", env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
 		props.setProperty("hibernate.jdbc.lob.non_contextual_creation", env.getProperty("spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation"));
 		props.setProperty("hibernate.show_sql", env.getProperty("spring.jpa.show-sql"));
-		//props.setProperty("hibernate.format_sql", env.getProperty("spring.jpa.properties.hibernate.format_sql"));
+		props.setProperty("hibernate.format_sql", env.getProperty("spring.jpa.properties.hibernate.format_sql"));
 		//props.setProperty("javax.persistence.sql-load-script-source", "schema.sql");
         return props;
     }

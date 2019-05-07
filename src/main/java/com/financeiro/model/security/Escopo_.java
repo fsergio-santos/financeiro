@@ -11,5 +11,8 @@ public abstract class Escopo_ {
 	public static volatile SingularAttribute<Escopo, String> nome;
 	public static volatile SingularAttribute<Escopo, Integer> id;
 
+	public static final String NOME = "nome";
+	public static final String ID = "id";
+
 }
 

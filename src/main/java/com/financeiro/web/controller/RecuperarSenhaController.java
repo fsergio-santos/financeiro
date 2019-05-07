@@ -21,9 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.financeiro.model.dto.ChangePassword;
 import com.financeiro.model.dto.Email;
 import com.financeiro.model.security.Usuario;
-import com.financeiro.service.EmailService;
 import com.financeiro.service.RegistrarUsuarioService;
 import com.financeiro.service.UserService;
+import com.financeiro.util.email.CriarMensagemEmail;
 
 @Controller
 @RequestMapping(value="/recuperar")
@@ -36,7 +36,7 @@ public class RecuperarSenhaController {
 	private UserService usuarioService;
 	
 	@Autowired
-	private EmailService emailService;
+	private CriarMensagemEmail criarMensagemEmail;
 
 	@RequestMapping(value="/email", method=RequestMethod.GET)
 	public ModelAndView pegarEmail(Email email) {
@@ -56,8 +56,8 @@ public class RecuperarSenhaController {
         	attr.addFlashAttribute("fail", "E-mail fornecido não foi encontrado.");
         } else {
 	        final String token = UUID.randomUUID().toString();
-            registrarUsuarioService.createPasswordResetTokenForUsuario(usuario, token);
-            constructResetTokenEmail(getAppUrl(request), token, usuario);
+            registrarUsuarioService.criarNovaSenhaComTokenParaUsuario(usuario, token);
+            criarMensagemEmail.constructResetTokenEmail(criarMensagemEmail.getAppUrl(request), token, usuario);
 	        attr.addAttribute("success", "Enviamos link no seu e-mail para fazer a troca da senha");
         }
         return new ModelAndView("/recuperar/email");
@@ -67,7 +67,7 @@ public class RecuperarSenhaController {
     public String showChangePasswordPage(Model model, 
     		                             @RequestParam("id") final long id, 
     		                             @RequestParam("token") final String token, RedirectAttributes attributes) {
-        final String result = registrarUsuarioService.validatePasswordResetToken(id, token);
+        final String result = registrarUsuarioService.validarSenhaAlteradaComToken(id, token);
         if (result != null) {
             model.addAttribute("message", "Faça o Login " + result);
             return "redirect:/login";
@@ -83,23 +83,11 @@ public class RecuperarSenhaController {
     		attr.addAttribute("fail","Erro no processamento para salvar a senha");
    	    } else {
 	        Usuario usuario= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	        registrarUsuarioService.changeUsuarioPassword(usuario, password.getNewPassword());
+	        registrarUsuarioService.alterarUsuarioSenha(usuario, password.getNewPassword());
 	        attr.addAttribute("success","Senha salva com sucesso");
    	    }
         return mv;
     }
         
-    private void constructResetTokenEmail(final String contextPath, final String token, final Usuario usuario) {
-        final String url = contextPath + "/registro/changePassword?id=" + usuario.getId() + "&token=" + token;
-        final String message = " Enviamos mensagem no seu e-mail para você trocar sua senha atravês deste link"+" \r\n" + url;
-        constructEmail("Modifique sua senha", message  , usuario);
-    }
     
-    private void constructEmail(String subject, String body, Usuario usuario) {
-        emailService.sendSimpleMessage(usuario.getEmail(), subject, body, "fsergio.santos@gmail.com");
-    }
-    
-    private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-    }
 }

@@ -22,5 +22,16 @@ public abstract class Pessoa_ {
 	public static volatile SingularAttribute<Pessoa, String> contentType;
 	public static volatile ListAttribute<Pessoa, Telefone> telefones;
 
+	public static final String ATIVO = "ativo";
+	public static final String TIPO_PESSOA = "tipoPessoa";
+	public static final String FOTO = "foto";
+	public static final String SALARIO = "salario";
+	public static final String NOME = "nome";
+	public static final String ID = "id";
+	public static final String DATA_NASCIMENTO = "dataNascimento";
+	public static final String CNPJ_CPF = "cnpjCpf";
+	public static final String CONTENT_TYPE = "contentType";
+	public static final String TELEFONES = "telefones";
+
 }
 

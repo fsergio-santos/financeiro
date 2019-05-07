@@ -8,17 +8,17 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.financeiro.model.security.ResetPasswordToken;
+import com.financeiro.model.security.ResetarSenhaToken;
 import com.financeiro.model.security.Usuario;
 
 @Repository
-public interface PasswordResetTokenRepository extends JpaRepository<ResetPasswordToken, Long> {
+public interface PasswordResetTokenRepository extends JpaRepository<ResetarSenhaToken, Long> {
 	
-	public ResetPasswordToken findByToken(String token);
+	public ResetarSenhaToken findByToken(String token);
 
-    public ResetPasswordToken findByUsuario(Usuario usuario);
+    public ResetarSenhaToken findByUsuario(Usuario usuario);
 
-    public Stream<ResetPasswordToken> findAllByExpiryDateLessThan(LocalDate now);
+    public Stream<ResetarSenhaToken> findAllByExpiryDateLessThan(LocalDate now);
 
     void deleteByExpiryDateLessThan(LocalDate now);
 

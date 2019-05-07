@@ -2,10 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:data="http://www.thymeleaf.org/extras/data"
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-switch.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap-switch.min.css}">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header"
+	th:content="${_csrf.headerName}" />
 </head>
 <body>
 	<section layout:fragment="corpo">
@@ -17,74 +22,56 @@
 			</div>
 			<ul class="app-breadcrumb breadcrumb">
 				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
-				<li class="breadcrumb-item"><a th:href="@{/direitos/pesquisar}">Pesquisa Grupos Permissões</a></li>
+				<li class="breadcrumb-item"><a th:href="@{/direitos/pesquisar}">Pesquisa
+						Grupos Permissões</a></li>
 			</ul>
 		</div>
 		<div class="container">
 			<div class="tile">
 				<h3 class="tile-title">Registro</h3>
 				<div class="tile-body">
-					<form class="form-horizontal" 
-					      th:object="${rolePermissao}" method="POST"
-						  th:action="${rolePermissao.id == null} ? @{/direitos/salvar} : @{/direitos/editar}">
+					<form class="form-horizontal" th:object="${rolepermissao}"
+						method="POST"
+						th:action="${rolepermissao.id == null} ? @{/direitos/salvar} : @{/direitos/editar}"
+						id="formRolePermissao">
 						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
 								<div th:replace="fragments/validacao :: validacao"></div>
 								<div th:replace="fragments/alert"></div>
 								<div class="form-group">
-									<label for="roleid" class="control-label">Grupo</label>
-									<select id="roleid" class="form-control" th:field="*{roleId}"> 
+									<label for="roleid" class="control-label">Grupo</label> <select
+										id="roleid" class="form-control" th:field="*{role}">
 										<option value="">Selecione o grupo de usuários</option>
-										<option th:each="role : ${roles}"
-												th:value="${role.id}" th:text="${role.nome}"
-												th:classappend="${#fields.hasErrors('roleId')} ? 'is-invalid'" >
+										<option th:each="role : ${roles}" th:value="${role.id}"
+											th:text="${role.nome}"
+											th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
 										</option>
 									</select>
 									<div class="invalid-feedback">
-										<span th:errors="*{roleId}"></span>
+										<span th:errors="*{role}"></span>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
 								<div class="form-group">
-									<label for="permissaoId" class="control-label">Permissão</label>
-									<select id="permissaoId" class="form-control" th:field="*{permissaoId}"> 
-										<option value="">Selecione as permissões para o grupo</option>
-										<option th:each="permissao : ${permissoes}"
-												th:value="${permissao.id}" th:text="${permissao.nome}"
-												th:classappend="${#fields.hasErrors('permissaoId')} ? 'is-invalid'" >
+									<label for="escopoId" class="control-label">Escopo</label> <select
+										id="escopoId" class="form-control" th:field="*{scope}">
+										<option value="">Selecione o escopo para as
+											permissões</option>
+										<option th:each="escopo : ${scopes}" th:value="${escopo.id}"
+											th:text="${escopo.nome}"
+											th:classappend="${#fields.hasErrors('scope')} ? 'is-invalid'">
 										</option>
 									</select>
 									<div class="invalid-feedback">
-										<span th:errors="*{permissaoId}"></span>
+										<span th:errors="*{scope}"></span>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
 								<div class="form-group">
-									<label for="escopoId" class="control-label">Escopo</label>
-									<select id="escopoId" class="form-control" th:field="*{scopeId}"> 
-										<option value="">Selecione o escopo para as permissões</option>
-										<option th:each="escopo : ${scopes}"
-												th:value="${escopo.id}" th:text="${escopo.nome}"
-												th:classappend="${#fields.hasErrors('scopeId')} ? 'is-invalid'" >
-										</option>
-									</select>
-									<div class="invalid-feedback">
-										<span th:errors="*{scopeId}"></span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-				   			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
-									<div class="form-group">
 									<label for="dataCadastro" class="control-label">Data
-										Cadastro</label> <input type="date" id="dataCadastro"
+										Cadastro</label> <input type="text" id="dataCadastro"
 										class="form-control" placeholder="99/99/9999"
 										name="dataCadastro" th:field="*{dataCadastro}"
 										th:classappend="${#fields.hasErrors('dataCadastro')} ? 'is-invalid'" />
@@ -95,50 +82,33 @@
 							</div>
 						</div>
 						<fieldset>
-							<legend>Direitos de Acesso</legend>
+							<legend>Permissões de Grupos</legend>
 							<div class="row">
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-									<div class="form-group "
-										th:classappend="${#fields.hasErrors('right_read')} ? has-error">
-										<label for="right_read" class="control-label">Leitura</label>
-										<div class="make-switch switch-large">
-											<input type="checkbox" class="js-status" id="right_read"
-												data-off-color="danger"
-												data-on-text="<i class='fa fa-check'></i>"
-												data-off-text="<i class='fa fa-times'></i>"
-												th:field="*{right_read}" />
+
+								<th:block th:each="permissao : ${permissoes}">
+									<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+										<div class="form-group">
+
+											<div class="make-switch switch-large">
+												<input type="checkbox" th:value="${permissao.id}"
+													th:field="*{ListaPermissoes}" class="js-status"
+													data-group-cls="btn-group-sm" data-off-label="false"
+													data-on-label="false" data-off-icon-cls="fa fa-times"
+													data-on-icon-cls="fa fa-check" /> <label
+													th:text="${permissao.nome}"></label>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-									<div class="form-group"
-										th:classappend="${#fields.hasErrors('right_write')} ? has-error">
-										<label for="right_write" class="control-label">Escrita</label>
-										<div class="make-switch switch-large">
-											<input type="checkbox" class="js-status" id="right_write"
-												data-off-color="danger"
-												data-on-text="<i class='fa fa-check'></i>"
-												data-off-text="<i class='fa fa-times'></i>"
-												th:field="*{right_write}" />
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-									<div class="form-group"
-										th:classappend="${#fields.hasErrors('right_delete')} ? has-error">
-										<label for="right_delete" class="control-label">Excluir</label>
-										<div class="make-switch switch-large">
-											<input type="checkbox" class="js-status" id="right_delete"
-												data-off-color="danger"
-												data-on-text="<i class='fa fa-check'></i>"
-												data-off-text="<i class='fa fa-times'></i>"
-												th:field="*{right_delete}" />
-										</div>
-									</div>
-								</div>
+
+								</th:block>
+
 							</div>
 						</fieldset>
-						<input type="hidden" id="id" th:field="*{id}" />
+
+						<input type="hidden" id="id" th:field="*{id}" /> <input
+							type="hidden" id="id_role" th:field="*{id.role_id}" /> <input
+							type="hidden" id="id_escopo" th:field="*{id.escopo_id}" />
+
 						<div class="tile-footer">
 
 							<div class="col-lg-offset-2 col-md-offset-2">
@@ -165,40 +135,76 @@
 		</div>
 	</section>
 	<th:block layout:fragment="javascript-extra">
-  		<script th:src="@{/js/bootstrap-switch.min.js}"></script>
+		<script th:src="@{/js/bootstrap-checkbox.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-datepicker.pt-BR.min.js}"></script>
+
 		<script>
-			$('.js-status').bootstrapSwitch();
+			$(':checkbox').checkboxpicker();
 	    </script>
-	    <script>
-	        $('#escopoId').click(function(){
-				var opcao = $("#escopoId option:selected").val();
-				if (opcao == 'LEITURA'){
-					$('#right_read').bootstrapSwitch('state',true); 
-					$('#right_read').bootstrapSwitch('readonly',true);
-					$('#right_write').bootstrapSwitch('readonly',true);
-					$('#right_delete').bootstrapSwitch('readonly',true);
-				}
-				if (opcao == 'ESCRITA'){
-					$('#right_write').bootstrapSwitch('state',true);
-					$('#right_read').bootstrapSwitch('readonly',true);
-					$('#right_write').bootstrapSwitch('readonly',true);
-					$('#right_delete').bootstrapSwitch('readonly',true);
-				}
-				if (opcao == 'EXCLUSAO'){
-					$('#right_delete').bootstrapSwitch('state',true);
-					$('#right_read').bootstrapSwitch('readonly',true);
-					$('#right_write').bootstrapSwitch('readonly',true);
-					$('#right_delete').bootstrapSwitch('readonly',true);
-				}
-				if (opcao == 'TODOS'){
-					$('#right_read').bootstrapSwitch('state',true); 
-					$('#right_write').bootstrapSwitch('state',true);
-					$('#right_delete').bootstrapSwitch('state',true);
-					$('#right_read').bootstrapSwitch('readonly',true);
-					$('#right_write').bootstrapSwitch('readonly',true);
-					$('#right_delete').bootstrapSwitch('readonly',true);
-				}
-			});
+		<script>
+		    $(function(){
+		    	$('#dataCadastro').mask('00/00/0000');
+		    	$('#dataCadastro').datepicker({
+		    		orientation: 'bottom',
+		    		language: 'pt-BR',
+		    		autoclose: true,
+		    		todayHighlight: true
+		    	});
+		    });
+		    
+		    $(document).ready(function(){
+		    	 $(function(){
+				      var $checkbox = $("#formRolePermissao input[type='checkbox']");
+				      var total;
+				      var permissaoid;
+				      $checkbox.change(function(){
+			               total = 0;
+				    	   total = $checkbox.filter(':checked').length;
+				    	   total=total+1;
+					       for(i=1;i<=total;i++){
+						   	  if (!$('#ListaPermissoes'+i).is(':checked')){
+						   		permissaoid = $('#ListaPermissoes'+i).val();
+						   		ajax_processing(permissaoid);
+						   	  }
+						   }
+				      });
+				    });
+		    });
+		   
+		    
+		    
+		    function ajax_processing(permissao_id){
+		    	 var token = $('#_csrf').attr('content');
+		         var header = $('#_csrf_header').attr('content');
+		    	 var role_id = $('#id_role').val();
+		    	 var escopo_id = $('#id_escopo').val();
+		    	 var url = 'http://localhost:8080/rolepermissao/excluir';
+		    	 var json = {
+		    			 'permissao_id': permissao_id,
+		    			 'role_id'     : role_id,
+		    			 'escopo_id'   : escopo_id 
+		    		 }
+		    	 $.ajax({
+		    	        url: url,
+		    	        type: 'DELETE',
+		    	        contentType: 'application/json; charset=utf-8',
+		    	        data:JSON.stringify(json),
+		    	        dataType : "json",
+		    	        beforeSend: function(xhr) {
+		    	        	xhr.setRequestHeader(header, token);
+		    	        },
+		    	        success: function(data) {
+		    	        },
+		    	        error: function(error) {
+		    	        	console.log("the error object" + error);
+		    				alert("Submit failed" + JSON.stringify(error));
+		    	        },
+		    	    });
+		    	
+		    };
+		    
+		     
 	    </script>
 	</th:block>
 </body>

@@ -15,31 +15,28 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="TAB_RESET_TOKEN")
-public class ResetPasswordToken implements Serializable {
+public class ResetarSenhaToken implements Serializable {
 
-
-	private static final long serialVersionUID = 2990766395889264749L;
-
-	private static final int EXPIRATION = 60 * 24;
+	private static final int EXPIRAR = 60 * 24;
 
     private Long id;
     private String token;
     private Usuario usuario;
-    private Date expiryDate;
+    private Date dataExpiracao;
 
-    public ResetPasswordToken() {
+    public ResetarSenhaToken() {
         super();
     }
 
-    public ResetPasswordToken(final String token) {
+    public ResetarSenhaToken(final String token) {
         this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
+        this.dataExpiracao = calcularDataExpiracao(EXPIRAR);
     }
 
-    public ResetPasswordToken(final String token, final Usuario usuario) {
+    public ResetarSenhaToken(final String token, final Usuario usuario) {
         this.token = token;
         this.usuario = usuario;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
+        this.dataExpiracao = calcularDataExpiracao(EXPIRAR);
     }
 
     @Id
@@ -70,15 +67,15 @@ public class ResetPasswordToken implements Serializable {
         this.usuario = usuario;
     }
 
-    public Date getExpiryDate() {
-        return expiryDate;
+    public Date getDataExpiracao() {
+        return dataExpiracao;
     }
 
-    public void setExpiryDate(final Date expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setDataExpiracao(final Date dataExpiracao) {
+        this.dataExpiracao = dataExpiracao;
     }
 
-    private Date calculateExpiryDate(final int expiryTimeInMinutes) {
+    private Date calcularDataExpiracao(final int expiryTimeInMinutes) {
         final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Date().getTime());
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
@@ -87,7 +84,7 @@ public class ResetPasswordToken implements Serializable {
 
     public void updateToken(final String token) {
         this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
+        this.dataExpiracao = calcularDataExpiracao(EXPIRAR);
     }
 
     //
@@ -97,7 +94,7 @@ public class ResetPasswordToken implements Serializable {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Token [String=").append(token).append("]").append("[Expires").append(expiryDate).append("]");
+        builder.append("Token [String=").append(token).append("]").append("[Expirar").append(dataExpiracao).append("]");
         return builder.toString();
     }
 
@@ -117,7 +114,7 @@ public class ResetPasswordToken implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ResetPasswordToken other = (ResetPasswordToken) obj;
+		ResetarSenhaToken other = (ResetarSenhaToken) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

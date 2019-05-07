@@ -79,6 +79,12 @@ public class RolePermissaoId implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "RolePermissaoId [permissao_id=" + permissao_id + ", role_id=" + role_id + ", escopo_id=" + escopo_id
+				+ "]";
+	}
+
 	
 
 }

@@ -133,6 +133,7 @@ public class PessoaController {
 	@RequestMapping(value="/editar", method=RequestMethod.POST, params="action=salvar")
 	public ModelAndView editarPessoa(@Valid Pessoa pessoa, BindingResult result, RedirectAttributes attr) {
 		if (result.hasErrors()) {
+			result.getFieldError().getField();
 			return cadastrarPessoa(pessoa);
 		}
 		int id = pessoa.getId();

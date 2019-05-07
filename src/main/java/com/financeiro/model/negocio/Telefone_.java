@@ -14,5 +14,11 @@ public abstract class Telefone_ {
 	public static volatile SingularAttribute<Telefone, String> numeroTelefone;
 	public static volatile SingularAttribute<Telefone, Integer> id;
 
+	public static final String TIPO_TELEFONE = "tipoTelefone";
+	public static final String PESSOA = "pessoa";
+	public static final String MODELO_TELEFONE = "modeloTelefone";
+	public static final String NUMERO_TELEFONE = "numeroTelefone";
+	public static final String ID = "id";
+
 }
 

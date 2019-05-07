@@ -1,8 +1,8 @@
 package com.financeiro.service;
 
 
-import com.financeiro.model.security.ResetPasswordToken;
-import com.financeiro.model.security.TokenVerification;
+import com.financeiro.model.security.ResetarSenhaToken;
+import com.financeiro.model.security.ValidarTokenUsuario;
 import com.financeiro.model.security.Usuario;
 
 
@@ -12,24 +12,24 @@ public interface RegistrarUsuarioService {
 	
 	Usuario getUsuario(String verificationToken);
 	
-    void criaVerificationTokenForUsuario(Usuario usuario, String token);
+    void criaVerificacaoTokenParaUsuario(Usuario usuario, String token);
     
-	TokenVerification getVerificationToken(String VerificationToken);
+	ValidarTokenUsuario pegarVerificacaoToken(String VerificationToken);
 
-    TokenVerification generateNewVerificationToken(String token);
+    ValidarTokenUsuario gerarNovaValidacaoParaToken(String token);
 
-    void createPasswordResetTokenForUsuario(Usuario usuario, String token);
+    void criarNovaSenhaComTokenParaUsuario(Usuario usuario, String token);
 
-	ResetPasswordToken getPasswordResetToken(String token);
+	ResetarSenhaToken pegarNovaSenhaComToken(String token);
 
-	Usuario getUsuarioByPasswordResetToken(String token);
+	Usuario pegarUsuarioComNovaSenhaToken(String token);
 
-	void changeUsuarioPassword(Usuario usuario, String password);
+	void alterarUsuarioSenha(Usuario usuario, String password);
 
-	boolean checkIfValidOldPassword(Usuario usuario, String password); 
+	boolean verificarSenhaAntigoUsuario(Usuario usuario, String password); 
 
-	String validateVerificationToken(String token); 
+	String verificarValidacaoDoToken(String token); 
 
-	String validatePasswordResetToken(long id, String token);
+	String validarSenhaAlteradaComToken(long id, String token);
 
 }

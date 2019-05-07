@@ -3,6 +3,7 @@ package com.financeiro.security;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +35,15 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth) throws IOException, ServletException {
-        Date dataLogin = new Date();
+        int totalDias = 0;
+    	Date dataLogin = new Date();
         Usuario usuario = findUsuarioByEmail(auth);
-        updateRegistroUsuario(usuario);
-        if (dataSistema.totalDiasEntreDatas(usuario.getDataVencimentoSenha(), dataLogin) >= TOTALDIAS ) {
+        if (Objects.isNull(usuario.getDataVencimentoSenha())) {
+        	usuario.setDataVencimentoSenha(new Date());
+        }
+        updateRegistroUsuario(usuario); 
+        totalDias = calcularTotalDias(usuario.getDataVencimentoSenha(), dataLogin);
+        if ( totalDias >= TOTALDIAS ) {
         	redirectStrategy.sendRedirect(request, response, "/trocar/senha");
         } else {
         	redirectStrategy.sendRedirect(request, response, "/home");
@@ -51,6 +57,10 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     private void updateRegistroUsuario(Usuario usuario) {
         usuario.setLastLogin(LocalDate.now());
     	userService.updateRegistroUsuario(usuario);
+    }
+    
+    private int calcularTotalDias(Date dataInicial, Date dataFinal) {
+    	return dataSistema.totalDiasEntreDatas(dataInicial, dataFinal);
     }
 
 }

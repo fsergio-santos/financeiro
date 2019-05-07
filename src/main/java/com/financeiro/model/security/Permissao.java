@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -55,7 +56,9 @@ public class Permissao  implements Serializable{
 	public void setRolePermissao(List<RolePermissao> rolePermissao) {
 		this.rolePermissao = rolePermissao;
 	}
-
+	
+	
+   
 	@Override
 	public int hashCode() {
 		final int prime = 31;

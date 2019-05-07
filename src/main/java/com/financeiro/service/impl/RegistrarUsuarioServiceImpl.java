@@ -15,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.financeiro.model.security.ResetPasswordToken;
-import com.financeiro.model.security.TokenVerification;
+import com.financeiro.model.security.ResetarSenhaToken;
+import com.financeiro.model.security.ValidarTokenUsuario;
 import com.financeiro.model.security.Usuario;
 import com.financeiro.repository.PasswordResetTokenRepository;
 import com.financeiro.repository.RegistrarUsuarioRepository;
@@ -66,7 +66,7 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	@Override
 	@Transactional(readOnly=true)
 	public Usuario getUsuario(String verificationToken) {
-		final TokenVerification token = verificationTokenRepository.findByToken(verificationToken);
+		final ValidarTokenUsuario token = verificationTokenRepository.findByToken(verificationToken);
 		if (token != null) {
 			return token.getUsuario();
 		}
@@ -74,46 +74,46 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	}
 
 	@Override
-	public void criaVerificationTokenForUsuario(Usuario usuario, String token) {
-        final TokenVerification myToken = new TokenVerification(token, usuario);
+	public void criaVerificacaoTokenParaUsuario(Usuario usuario, String token) {
+        final ValidarTokenUsuario myToken = new ValidarTokenUsuario(token, usuario);
         verificationTokenRepository.save(myToken);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public TokenVerification getVerificationToken(String TokenVerification) {
+	public ValidarTokenUsuario pegarVerificacaoToken(String TokenVerification) {
     	 return verificationTokenRepository.findByToken(TokenVerification);
 	}
 
 	@Override
-	public TokenVerification generateNewVerificationToken(String token) {
-        TokenVerification vToken = verificationTokenRepository.findByToken(token);
+	public ValidarTokenUsuario gerarNovaValidacaoParaToken(String token) {
+        ValidarTokenUsuario vToken = verificationTokenRepository.findByToken(token);
         vToken.updateToken(UUID.randomUUID().toString());
         vToken = verificationTokenRepository.save(vToken);
         return vToken;
 	}
 
 	@Override
-	public void createPasswordResetTokenForUsuario(Usuario usuario, String token) {
-		 final ResetPasswordToken myToken = new ResetPasswordToken(token, usuario);
-	     passwordResetTokenRepository.save(myToken);
+	public void criarNovaSenhaComTokenParaUsuario(Usuario usuario, String token) {
+		 final ResetarSenhaToken tokenUsuario = new ResetarSenhaToken(token, usuario);
+	     passwordResetTokenRepository.save(tokenUsuario);
 	}
 
 
 	@Override
 	@Transactional(readOnly=true)
-	public ResetPasswordToken getPasswordResetToken(String token) {
+	public ResetarSenhaToken pegarNovaSenhaComToken(String token) {
 		return passwordResetTokenRepository.findByToken(token);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public Usuario getUsuarioByPasswordResetToken(String token) {
+	public Usuario pegarUsuarioComNovaSenhaToken(String token) {
 		return passwordResetTokenRepository.findByToken(token).getUsuario();
 	}
 
 	@Override
-	public void changeUsuarioPassword(Usuario usuario, String password) {
+	public void alterarUsuarioSenha(Usuario usuario, String password) {
 		 usuario.setPassword(encodeUsuarioPassword(password));
 		 usuario.setContraSenha(usuario.getPassword());
 		 usuario.setDataVencimentoSenha(dataSistema.somaData(new Date()));
@@ -121,14 +121,14 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	}
 
 	@Override
-	public boolean checkIfValidOldPassword(Usuario usuario, String password) {
+	public boolean verificarSenhaAntigoUsuario(Usuario usuario, String password) {
 		return passwordEncoder.matches(password, usuario.getPassword());
 	}
 
 	@Override
-	public String validateVerificationToken(String token) {
+	public String verificarValidacaoDoToken(String token) {
 		
-		final TokenVerification verificationToken = verificationTokenRepository.findByToken(token);
+		final ValidarTokenUsuario verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null) {
             return TOKEN_INVALIDO;
         }
@@ -146,14 +146,14 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	}
 
 	@Override
-    public String validatePasswordResetToken(long id, String token) {
-        final ResetPasswordToken passToken = passwordResetTokenRepository.findByToken(token);
+    public String validarSenhaAlteradaComToken(long id, String token) {
+        final ResetarSenhaToken passToken = passwordResetTokenRepository.findByToken(token);
         if ((passToken == null) || (passToken.getUsuario().getId() != id)) {
             return TOKEN_INVALIDO;
         }
 
         final Calendar cal = Calendar.getInstance();
-        if ((passToken.getExpiryDate()
+        if ((passToken.getDataExpiracao()
             .getTime() - cal.getTime()
             .getTime()) <= 0) {
             return TOKEN_EXPIRADO;

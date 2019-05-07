@@ -9,16 +9,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.financeiro.model.security.Usuario;
-import com.financeiro.model.security.TokenVerification;
+import com.financeiro.model.security.ValidarTokenUsuario;
 
 @Repository
-public interface VerificationTokenRepository extends JpaRepository<TokenVerification, Long> {
+public interface VerificationTokenRepository extends JpaRepository<ValidarTokenUsuario, Long> {
 	
-	public TokenVerification findByToken(String token);
+	public ValidarTokenUsuario findByToken(String token);
 
-    public TokenVerification findByUsuario(Usuario usuario);
+    public ValidarTokenUsuario findByUsuario(Usuario usuario);
 
-    public Stream<TokenVerification> findAllByExpiryDateLessThan(LocalDate now);
+    public Stream<ValidarTokenUsuario> findAllByExpiryDateLessThan(LocalDate now);
 
     public void deleteByExpiryDateLessThan(LocalDate now);
 

@@ -68,9 +68,7 @@
 								</a> 
 								</th>
 								<th style="width: 25px; font-weight: bold; text-align: center;">Data</th>
-								<th style="width: 25px; font-weight: bold; text-align: center;">Leitura</th>
-								<th style="width: 25px; font-weight: bold; text-align: center;">Escrita</th>
-								<th style="width: 25px; font-weight: bold; text-align: center;">Exclusão</th>
+								<th style="width: 25px; font-weight: bold; text-align: center;">Direito</th>
 								<th style="width: 25px; font-weight: bold; text-align: center;">Ação</th>
 							</tr>
 						</thead>
@@ -78,32 +76,9 @@
 							<tr th:each="role :${pagina.conteudo}">
 								<td class="text-center" th:text="${role.roleId.nome}"></td>
 								<td class="text-left" th:text="${role.permissaoId.nome}"></td>
-								<td class="text-left" th:text="${role.dataCadastro}"></td>
-								<td class="text-center">
-									<th:block th:if="${role.right_read}">
-										<span class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></span>
-									</th:block>
-									<th:block th:if="${not role.right_read}">
-										<span class="btn btn-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></span>
-									</th:block>
+								<td class="text-left" th:text="${#dates.format(role.dataCadastro,'dd/MM/yyyy')}"></td>
+								<td class="text-center" th:text="${role.scopeId.nome}">>
 								</td>
-								<td class="text-center">
-									<th:block th:if="${role.right_write}">
-										<span class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></span>
-									</th:block>
-									<th:block th:if="${not role.right_write}">
-										<span class="btn btn-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></span>
-									</th:block>
-								</td>
-								<td class="text-center">
-									<th:block th:if="${role.right_delete}">
-										<span class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></span>
-									</th:block>
-									<th:block th:if="${not role.right_delete}">
-										<span class="btn btn-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></span>
-									</th:block>
-								</td>
-								
 						 		<td data-title="Ação" class="text-center"><a id="btnUpdate"
 									class="btn btn-info btn-sm"
 									title="Alterar dados da permissão selecionada"

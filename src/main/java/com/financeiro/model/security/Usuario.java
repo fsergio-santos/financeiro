@@ -31,6 +31,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 
 import com.financeiro.util.ValidarEmail;
 import com.financeiro.util.ValidarSenha;
@@ -38,7 +39,7 @@ import com.financeiro.util.ValidarSenha;
 @DynamicUpdate(true)
 @Entity
 @Table(name = "TAB_USER")
-//@ValidarSenha(senha="password",contraSenha="contraSenha",message="contra Senha não confere...")
+@ValidarSenha(senha="password",contraSenha="contraSenha",message="contra Senha não confere...")
 public class Usuario implements UserDetails, Serializable{
 
 	private static final long serialVersionUID = -2113184215530751581L;
@@ -51,6 +52,8 @@ public class Usuario implements UserDetails, Serializable{
     private LocalDate lastLogin;
     private Date dataVencimentoSenha;
     private boolean ativo = false;
+    private String foto;
+	private String contentType;
     private List<Role> roles;
     private List<UsuarioSenha> usuarioSenhas;
         
@@ -150,6 +153,24 @@ public class Usuario implements UserDetails, Serializable{
 	public void setDataVencimentoSenha(Date dataVencimentoSenha) {
 		this.dataVencimentoSenha = dataVencimentoSenha;
 	}
+	
+	@Column(name="user_foto", length=100, nullable=true)
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+	
+	@Column(name = "content_type", length=100, nullable=true)
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
 
 	@Override
 	@Transient
@@ -199,6 +220,11 @@ public class Usuario implements UserDetails, Serializable{
 	@PreUpdate
 	private void preUpdate() {
 		this.contraSenha = password;
+	}
+	
+	@Transient
+	public String getFotoOuMock() {
+		return !StringUtils.isEmpty(foto) ? foto : "users.png";
 	}
     
 	@Override

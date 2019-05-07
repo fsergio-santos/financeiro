@@ -74,8 +74,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     	Usuario usuario = userService.findByIdAndRoleAndPermission(usuarioSistema.getUsuario().getId());
   	    
     	for (Role authority : usuario.getRoles()) {
-	
+
+    	    		
 			for (RolePermissao rolePermissao : authority.getRolePermissao()) {
+					
 				
 				if ((objetoAcesso.equals(rolePermissao.getPermissaoId().getNome().toUpperCase()))	&& 
 					(permissao.equals(rolePermissao.getScopeId().getNome().toUpperCase()))) {

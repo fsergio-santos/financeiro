@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.financeiro.model.security.TokenVerification;
+import com.financeiro.model.security.ValidarTokenUsuario;
 import com.financeiro.model.security.Usuario;
-import com.financeiro.service.EmailService;
 import com.financeiro.service.RegistrarUsuarioService;
 import com.financeiro.service.exception.EmailUsuarioCadastradoException;
+import com.financeiro.util.email.CriarMensagemEmail;
 import com.financeiro.web.registrar.RegistrarUsuario;
 
 @Controller
@@ -37,8 +37,8 @@ public class RegistrarUsuarioController {
 	@Autowired
 	private RegistrarUsuarioService registrarUsuarioService;
 
-    @Autowired
-	private EmailService emailService;
+	@Autowired
+	private CriarMensagemEmail criarMensagemEmail;
 	
 	@RequestMapping(value="/cadastrar")
 	public ModelAndView registrarUsuario(Usuario usuario) {
@@ -55,7 +55,7 @@ public class RegistrarUsuarioController {
 		}
 		try {
 			registrarUsuarioService.registrarUsuario(usuario);
-			eventPublisher.publishEvent(new RegistrarUsuario(usuario, request.getLocale(), getAppUrl(request)));
+			eventPublisher.publishEvent(new RegistrarUsuario(usuario, request.getLocale(), criarMensagemEmail.getAppUrl(request)));
 		} catch (EmailUsuarioCadastradoException e) {
 		  result.rejectValue("email", e.getMessage(), e.getMessage());
 		  return registrarUsuario(usuario);
@@ -65,8 +65,8 @@ public class RegistrarUsuarioController {
 	
 	
 	@RequestMapping(value = "/confirmar-registro-usuario", method = RequestMethod.GET)
-    public String confirmRegistration( final Model model, @RequestParam("token") final String token, RedirectAttributes attributes) throws UnsupportedEncodingException {
-        final String result = registrarUsuarioService.validateVerificationToken(token);
+    public String confirmarRegistroUsuario( final Model model, @RequestParam("token") final String token, RedirectAttributes attributes) throws UnsupportedEncodingException {
+        final String result = registrarUsuarioService.verificarValidacaoDoToken(token);
         if (result.equals(TOKEN_VALID)) {
             Usuario usuario = registrarUsuarioService.getUsuario(token);
             if ( usuario != null ) {
@@ -84,27 +84,16 @@ public class RegistrarUsuarioController {
 	
 	
     @RequestMapping(value = "/enviar-token-de-registro", method = RequestMethod.GET)
-    public ModelAndView resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken, RedirectAttributes attr) {
-        final TokenVerification newToken = registrarUsuarioService.generateNewVerificationToken(existingToken);
-        final Usuario usuario = registrarUsuarioService.getUsuario(newToken.getToken());
-        constructResendVerificationTokenEmail(getAppUrl(request), newToken, usuario);
+    public ModelAndView re_enviarRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken, RedirectAttributes attr) {
+        ValidarTokenUsuario token = registrarUsuarioService.gerarNovaValidacaoParaToken(existingToken);
+        Usuario usuario = registrarUsuarioService.getUsuario(token.getToken());
+        criarMensagemEmail.constructResendVerificationTokenEmail(criarMensagemEmail.getAppUrl(request), token, usuario);
         attr.addFlashAttribute("success","Enviamos mensagem para seu e-mail com link para realizar um novo registro ");
         return registrarUsuario(usuario);
     }
     
-    private void constructResendVerificationTokenEmail(String contextPath, final TokenVerification newToken, final Usuario usuario) {
-        final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
-        final String message = "Use o link em seu e-mail para realizar um novo registro ";
-        constructEmail("Fazer um novo registro", message + " \r\n" + confirmationUrl, usuario);
-    }
     
-    private void constructEmail(String subject, String body, Usuario usuario) {
-        emailService.sendSimpleMessage(usuario.getEmail(), subject, body, "fsergio.santos@gmail.com");
-    }
     
-	private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-    }
-
+    
 
 }

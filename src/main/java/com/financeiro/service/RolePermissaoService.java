@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.financeiro.model.dto.ListaRolePermissao;
 import com.financeiro.model.security.RolePermissao;
 import com.financeiro.model.security.RolePermissaoId;
 import com.financeiro.repository.filtros.RolePermissaoFiltro;
@@ -23,6 +24,6 @@ public interface RolePermissaoService {
 	
 	Page<RolePermissao> listRolePermissaoWithPagination(RolePermissaoFiltro rolePermissaoFiltro, Pageable pageable);
 	
-	List<RolePermissao> findByRolePermissao(Integer role_id);
+	ListaRolePermissao findByRolePermissao(Integer role_id, Integer escope_id);
 	
 }

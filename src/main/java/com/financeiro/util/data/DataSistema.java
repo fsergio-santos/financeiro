@@ -28,6 +28,7 @@ public class DataSistema {
 	
 	
 	public int totalDiasEntreDatas(Date dataInicial, Date dataFinal) {
-		return (int) ((dataFinal.getTime() - dataInicial.getTime()) / (MILISEGUNDOS * SEGUNDOS * HORAS * DIA ));
+		int totaldias = (int) ((dataFinal.getTime() - dataInicial.getTime()) / (MILISEGUNDOS * SEGUNDOS * HORAS * DIA ));
+		return totaldias;
 	}
 }

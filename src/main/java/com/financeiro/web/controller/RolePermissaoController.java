@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.financeiro.model.dto.ListaRolePermissao;
 import com.financeiro.model.security.Escopo;
 import com.financeiro.model.security.Permissao;
 import com.financeiro.model.security.Role;
@@ -54,48 +55,43 @@ public class RolePermissaoController {
 	}
 	
 	@RequestMapping(value="/cadastrar")
-	public ModelAndView cadastrarRolePermissao(RolePermissao rolepermissao) {
+	public ModelAndView cadastrarRolePermissao(ListaRolePermissao rolepermissao) {
 		ModelAndView mv = new ModelAndView("/direitos/cadastro");
 		mv.addObject("rolepermissao",rolepermissao);
 		return mv;
 	}
 	
 	@RequestMapping(value="/salvar", method=RequestMethod.POST,params="action=salvar")
-	public ModelAndView salvar(@Valid RolePermissao rolePermissao, BindingResult result,  RedirectAttributes attr) {
+	public ModelAndView salvar(@Valid ListaRolePermissao rolepermissao, BindingResult result,  RedirectAttributes attr) {
 		if (result.hasErrors()) {
-			return cadastrarRolePermissao(rolePermissao);
+			return cadastrarRolePermissao(rolepermissao);
 		}
-		
-		RolePermissaoId rpId = new RolePermissaoId(rolePermissao.getPermissaoId().getId(), 
-												   rolePermissao.getRoleId().getId(),
-			 								       rolePermissao.getScopeId().getId());
-		
-		rolePermissao.setId(rpId);
-		rolePermissaoService.salvar(rolePermissao);
-		attr.addFlashAttribute("success", "Registro inserido com sucesso.");
-		return new ModelAndView("/direitos/cadastro");
+		registrarRolePermissao(rolepermissao);
+		ModelAndView mv = new ModelAndView("/direitos/cadastro");
+		ListaRolePermissao rolePermissao = new ListaRolePermissao();
+		mv.addObject("success", "Registro inserido com sucesso.");
+		mv.addObject("rolepermissao", rolePermissao);
+		return mv;
 	}
+
+	
 
 	@RequestMapping(value="/editar/{permissao_id}/{role_id}/{escopo_id}", method=RequestMethod.GET)
 	public String editar(@PathVariable("permissao_id") Integer permissao_id, 
 			             @PathVariable("role_id") Integer role_id,
 			             @PathVariable("escopo_id") Integer escopo_id, ModelMap model) {
-		RolePermissaoId rpId = new RolePermissaoId(permissao_id,role_id,escopo_id);
-		RolePermissao rolePermissao = rolePermissaoService.findById(rpId);
-		model.addAttribute("rolePermissao", rolePermissao);
+		ListaRolePermissao rolepermissao = new ListaRolePermissao();
+		rolepermissao = rolePermissaoService.findByRolePermissao(role_id, escopo_id);
+		model.addAttribute("rolepermissao", rolepermissao);
 		return "/direitos/cadastro";
 	}
 	
 	@RequestMapping(value="/editar", method=RequestMethod.POST, params="action=salvar")
-	public ModelAndView editarRolePermissao(@Valid RolePermissao rolePermissao, BindingResult result, RedirectAttributes attr) {
-		if (result.hasErrors()) {
-			return cadastrarRolePermissao(rolePermissao);
-		}
-		RolePermissaoId rpId = new RolePermissaoId(rolePermissao.getPermissaoId().getId(), 
-												   rolePermissao.getRoleId().getId(),
-												   rolePermissao.getScopeId().getId());
-		rolePermissao.setId(rpId);
-		rolePermissaoService.salvar(rolePermissao);
+	public ModelAndView editarRolePermissao(ListaRolePermissao rolepermissao, BindingResult result, RedirectAttributes attr) {
+		/*if (result.hasErrors()) {
+			return cadastrarRolePermissao(rolepermissao);
+		}*/
+		registrarRolePermissao(rolepermissao);
 		ModelAndView model = new ModelAndView("/direitos/cadastro");
 		model.addObject("success","Resgistro alterado com sucesso.");
 		return model;
@@ -153,7 +149,21 @@ public class RolePermissaoController {
 	@ModelAttribute("scopes")
 	public List<Escopo> getScopes() {
 		return escopoService.listarTodasEscopos();
-	}	
+	}
+	
+	private void registrarRolePermissao(ListaRolePermissao rolepermissao) {
+		RolePermissaoId rpId = new RolePermissaoId();
+		for ( Permissao permissao :rolepermissao.getListaPermissoes()) {
+			 System.out.println(permissao.toString());
+			 rpId.setPermissao_id(permissao.getId());
+			 rpId.setRole_id(rolepermissao.getRole().getId());
+			 rpId.setEscopo_id(rolepermissao.getScope().getId());
+			 RolePermissao rolePermissao = new RolePermissao();
+ 			 rolePermissao.setId(rpId);
+ 			 rolePermissao.setDataCadastro(rolepermissao.getDataCadastro());
+     		 rolePermissaoService.salvar(rolePermissao);
+		}
+	}
 
 	
 }

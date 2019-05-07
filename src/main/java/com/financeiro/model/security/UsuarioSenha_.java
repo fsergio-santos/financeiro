@@ -14,5 +14,10 @@ public abstract class UsuarioSenha_ {
 	public static volatile SingularAttribute<UsuarioSenha, Integer> id;
 	public static volatile SingularAttribute<UsuarioSenha, Date> dataUpdate;
 
+	public static final String SENHA = "senha";
+	public static final String USUARIO = "usuario";
+	public static final String ID = "id";
+	public static final String DATA_UPDATE = "dataUpdate";
+
 }
 

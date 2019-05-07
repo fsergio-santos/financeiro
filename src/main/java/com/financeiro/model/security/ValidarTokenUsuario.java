@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="TAB_TOKEN")
-public class TokenVerification implements Serializable{
+public class ValidarTokenUsuario implements Serializable{
 
 	private static final long serialVersionUID = 7373767026910156087L;
 
@@ -18,15 +18,15 @@ public class TokenVerification implements Serializable{
     private Usuario usuario;
     private Date expiryDate;
 
-    public TokenVerification() {
+    public ValidarTokenUsuario() {
     }
 
-    public TokenVerification(final String token) {
+    public ValidarTokenUsuario(final String token) {
         this.token = token;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 
-    public TokenVerification(final String token, final Usuario usuario) {
+    public ValidarTokenUsuario(final String token, final Usuario usuario) {
         this.token = token;
         this.usuario = usuario;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
@@ -106,7 +106,7 @@ public class TokenVerification implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TokenVerification other = (TokenVerification) obj;
+		ValidarTokenUsuario other = (ValidarTokenUsuario) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

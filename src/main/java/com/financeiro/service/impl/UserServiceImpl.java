@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 	@PreAuthorize("hasPermission('cadastro_usuario','escrita')")
 	public Usuario salvar(Usuario user) {
 		if (emailExiste(user.getEmail())) {
-			throw new EmailUsuarioCadastradoException("Usuário já cadastrado!");
+			throw new EmailUsuarioCadastradoException("UsuÃ¡rio jÃ¡ cadastrado!");
 		}
 		user.setAtivo(true);
 		user.setDataVencimentoSenha(dataSistema.somaData(new Date()));
@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
 	public Usuario updateRegistroUsuario(Usuario usuario) {
 		Usuario usuarioLogado = findById(usuario.getId());
 		usuarioLogado.setLastLogin(usuario.getLastLogin());
+		usuarioLogado.setDataVencimentoSenha(usuario.getDataVencimentoSenha());
 		return userRepository.save(usuarioLogado);
 	}
 

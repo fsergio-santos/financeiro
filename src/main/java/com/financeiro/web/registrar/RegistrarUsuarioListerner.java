@@ -1,6 +1,6 @@
 package com.financeiro.web.registrar;
 
-import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -10,7 +10,7 @@ import com.financeiro.model.security.Usuario;
 import com.financeiro.service.EmailService;
 import com.financeiro.service.RegistrarUsuarioService;
 
-
+import java.util.UUID;
 
 @Component
 public class RegistrarUsuarioListerner implements ApplicationListener<RegistrarUsuario> {
@@ -23,18 +23,18 @@ public class RegistrarUsuarioListerner implements ApplicationListener<RegistrarU
 	
 	@Override
 	public void onApplicationEvent(RegistrarUsuario registrarUsuario) {
-		confirmRegistration(registrarUsuario);
+		confirmarRegistroDeUsuario(registrarUsuario);
 
 	}
 	
-	private void confirmRegistration(final RegistrarUsuario event) {
+	private void confirmarRegistroDeUsuario(final RegistrarUsuario event) {
         final Usuario usuario = event.getUsuario();
         final String token = UUID.randomUUID().toString();
-        usuarioService.criaVerificationTokenForUsuario(usuario, token);
-        constructEmailMessage(event, usuario, token);
+        usuarioService.criaVerificacaoTokenParaUsuario(usuario, token);
+        montarEmailMensagen(event, usuario, token);
     }
 	
-	private final void constructEmailMessage(final RegistrarUsuario event, final Usuario usuario, final String token) {
+	private final void montarEmailMensagen(final RegistrarUsuario event, final Usuario usuario, final String token) {
         final String recipientAddress = usuario.getEmail();
         final String subject = "Confirmar Registro";
         final String confirmationUrl = event.getUrl() + "/registro/registrationConfirm.html?token=" + token;

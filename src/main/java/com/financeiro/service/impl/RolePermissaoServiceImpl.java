@@ -2,6 +2,7 @@ package com.financeiro.service.impl;
 
 import java.util.List;
 
+import javax.validation.ReportAsSingleViolation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.financeiro.model.dto.ListaRolePermissao;
 import com.financeiro.model.security.RolePermissao;
 import com.financeiro.model.security.RolePermissaoId;
 import com.financeiro.repository.RolePermissaoRepository;
@@ -32,8 +34,8 @@ public class RolePermissaoServiceImpl implements RolePermissaoService {
 	}
 
 	@Override
-	@Secured({"ROLE_ADMINISTRADOR","ROLE_USUARIO"})
-	@PreAuthorize("hasPermission('cadastro_role_permissao','escrita')")
+ 	@Secured({"ROLE_ADMINISTRADOR","ROLE_USUARIO"})
+	@PreAuthorize("hasPermission('cadastro_direitos','escrita')")
 	public RolePermissao salvar(RolePermissao rolePermissao) {
 		return rolePermissaoRepository.saveAndFlush(rolePermissao);
 	}
@@ -46,14 +48,14 @@ public class RolePermissaoServiceImpl implements RolePermissaoService {
 
 	@Override
 	@Secured("hasRole('ROLE_ADMINISTRADOR')")
-	@PreAuthorize("hasPermission('cadastro_role_permissao','escrita')")
+	@PreAuthorize("hasPermission('cadastro_direitos','escrita')")
 	public RolePermissao salvar(RolePermissaoId id, RolePermissao rolePermissao) {
 		return rolePermissaoRepository.save(rolePermissao);
 	}
 
 	@Override
-	@Secured("hasRole('ROLE_ADMINISTRADOR')")
-	@PreAuthorize("hasPermission('cadastro_role_permissao','exclusao')")
+ 	@Secured("hasRole('ROLE_ADMINISTRADOR')")
+	@PreAuthorize("hasPermission('cadastro_direitos','exclusao')")
 	public void delete(RolePermissaoId id) {
 		RolePermissao rolePermissao = findById(id);
 		rolePermissaoRepository.delete(rolePermissao);
@@ -67,8 +69,25 @@ public class RolePermissaoServiceImpl implements RolePermissaoService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<RolePermissao> findByRolePermissao(Integer role_id) {
-		return rolePermissaoRepository.findByRolePermissao(role_id);
+	public ListaRolePermissao findByRolePermissao(Integer role_id, Integer escope_id) {
+		
+		List<RolePermissao> listaPermissao =  rolePermissaoRepository.findByRolePermissao(role_id,escope_id);
+        ListaRolePermissao listaRolePermissao = new ListaRolePermissao();
+        RolePermissaoId rpId = new RolePermissaoId();
+      
+        for (RolePermissao rp : listaPermissao) {
+        	 rpId.setEscopo_id(rp.getScopeId().getId());
+        	 rpId.setPermissao_id(rp.getPermissaoId().getId());
+        	 rpId.setRole_id(rp.getRoleId().getId());
+        	 listaRolePermissao.setId(rpId); 
+             listaRolePermissao.setRole(rp.getRoleId());
+             listaRolePermissao.setScope(rp.getScopeId());
+             listaRolePermissao.setDataCadastro(rp.getDataCadastro());
+             listaRolePermissao.getListaPermissoes().add(rp.getPermissaoId());
+        }
+    	return listaRolePermissao;
+		
+	
 	}
     
 }

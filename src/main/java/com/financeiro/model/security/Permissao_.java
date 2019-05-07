@@ -13,5 +13,9 @@ public abstract class Permissao_ {
 	public static volatile SingularAttribute<Permissao, String> nome;
 	public static volatile SingularAttribute<Permissao, Integer> id;
 
+	public static final String ROLE_PERMISSAO = "rolePermissao";
+	public static final String NOME = "nome";
+	public static final String ID = "id";
+
 }
 

@@ -152,7 +152,7 @@ public class Pessoa implements Serializable {
 		this.foto = foto;
 	}
 	
-	@Column(name = "content_type", length=100)
+	@Column(name = "content_type", length=100, nullable=true)
 	public String getContentType() {
 		return contentType;
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,7 +19,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
 import com.financeiro.model.security.RolePermissao_;
+import com.financeiro.model.dto.ListaRolePermissao;
+import com.financeiro.model.negocio.Pessoa;
+import com.financeiro.model.security.Permissao;
 import com.financeiro.model.security.RolePermissao;
+import com.financeiro.model.security.RolePermissaoId;
 import com.financeiro.repository.filtros.RolePermissaoFiltro;
 import com.financeiro.repository.query.RolePermissaoRepositoryQuery;
 
@@ -94,9 +99,11 @@ public class RolePermissaoRepositoryImpl implements RolePermissaoRepositoryQuery
 	}
 
 	@Override
-	public List<RolePermissao> findByRolePermissao(Integer role_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RolePermissao> findByRolePermissao(Integer role_id, Integer escope_id) {
+		Query query = entityManager.createQuery("SELECT rp FROM RolePermissao rp WHERE rp.id.role_id =:role_id and rp.id.escopo_id =:escope_id");
+		query.setParameter("role_id", role_id);
+		query.setParameter("escope_id", escope_id);
+		return query.getResultList();
 	}	
 	
 	

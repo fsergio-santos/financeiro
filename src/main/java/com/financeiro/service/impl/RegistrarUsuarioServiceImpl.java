@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.financeiro.model.security.ResetarSenhaToken;
 import com.financeiro.model.security.Usuario;
-import com.financeiro.repository.PasswordResetTokenRepository;
 import com.financeiro.repository.RegistrarUsuarioRepository;
 import com.financeiro.repository.UserRepository;
 import com.financeiro.repository.ResetarSenhaTokenRepository;
@@ -47,10 +46,10 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private ResetarSenhaTokenRepository verificationTokenRepository;
+	private ResetarSenhaTokenRepository resetarSenhaTokenRepository;
 	
 	@Autowired
-	private PasswordResetTokenRepository passwordResetTokenRepository;
+	private ResetarSenhaTokenRepository passwordResetTokenRepository;
 	
 	@Override
 	public Usuario registrarUsuario(Usuario usuario) {
@@ -65,7 +64,7 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	@Override
 	@Transactional(readOnly=true)
 	public Usuario getUsuario(String verificationToken) {
-		final ResetarSenhaToken token = verificationTokenRepository.findByToken(verificationToken);
+		final ResetarSenhaToken token = resetarSenhaTokenRepository.findByToken(verificationToken);
 		if (token != null) {
 			return token.getUsuario();
 		}
@@ -75,20 +74,20 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	@Override
 	public void criaVerificacaoTokenParaUsuario(Usuario usuario, String token) {
         final ResetarSenhaToken myToken = new ResetarSenhaToken(token, usuario);
-        verificationTokenRepository.save(myToken);
+        resetarSenhaTokenRepository.save(myToken);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public ResetarSenhaToken pegarVerificacaoToken(String TokenVerification) {
-    	 return verificationTokenRepository.findByToken(TokenVerification);
+    	 return resetarSenhaTokenRepository.findByToken(TokenVerification);
 	}
 
 	@Override
 	public ResetarSenhaToken gerarNovaValidacaoParaToken(String token) {
-		ResetarSenhaToken vToken = verificationTokenRepository.findByToken(token);
+		ResetarSenhaToken vToken = resetarSenhaTokenRepository.findByToken(token);
         vToken.updateToken(UUID.randomUUID().toString());
-        vToken = verificationTokenRepository.save(vToken);
+        vToken = resetarSenhaTokenRepository.save(vToken);
         return vToken;
 	}
 
@@ -127,14 +126,14 @@ public class RegistrarUsuarioServiceImpl implements RegistrarUsuarioService {
 	@Override
 	public String verificarValidacaoDoToken(String token) {
 		
-		final ResetarSenhaToken verificationToken = verificationTokenRepository.findByToken(token);
+		final ResetarSenhaToken verificationToken = resetarSenhaTokenRepository.findByToken(token);
         if (verificationToken == null) {
             return TOKEN_INVALIDO;
         }
         final Usuario usuario = verificationToken.getUsuario();
         final Calendar cal = Calendar.getInstance();
         if ((verificationToken.getDataExpiracao().getTime() - cal.getTime().getTime()) <= 0) {
-        	verificationTokenRepository.delete(verificationToken);
+        	resetarSenhaTokenRepository.delete(verificationToken);
             return TOKEN_EXPIRADO;
         }
 

@@ -18,12 +18,11 @@ public interface ResetarSenhaTokenRepository extends JpaRepository<ResetarSenhaT
 
     public ResetarSenhaToken findByUsuario(Usuario usuario);
 
-    public Stream<ResetarSenhaToken> findAllByExpiryDateLessThan(LocalDate now);
+    public Stream<ResetarSenhaToken> findAllByDataExpiracaoLessThan(LocalDate now);
 
-    public void deleteByExpiryDateLessThan(LocalDate now);
+    public void deleteByDataExpiracaoLessThan(LocalDate now);
 
     @Modifying
     @Query("delete from ResetarSenhaToken rst where rst.dataExpiracao <= ?1")
     public void deleteAllExpiredSince(LocalDate now);
-
 }

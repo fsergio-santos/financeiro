@@ -23,6 +23,7 @@ public class Permissao  implements Serializable{
 	private static final long serialVersionUID = 2793317666807558501L;
 	private Integer id;
 	private String nome;
+	private boolean checked = false;
 	private List<RolePermissao> rolePermissao;
 			
 	@Id
@@ -58,7 +59,15 @@ public class Permissao  implements Serializable{
 	}
 	
 	
-   
+    @Transient
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -87,6 +96,11 @@ public class Permissao  implements Serializable{
 		} else if (!nome.equals(other.nome))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Permissao [id=" + id + ", nome=" + nome + ", rolePermissao=" + rolePermissao + "]";
 	}
 	
 	

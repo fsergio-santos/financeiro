@@ -1,12 +1,13 @@
 package com.financeiro.model.dto;
 
-public class RolePermissaoId {
+public class GrupoPermissaoId {
 
+	
 	private int permissao_id;
 	private int role_id;
 	private int escopo_id;
 	
-	public RolePermissaoId() {
+	public GrupoPermissaoId() {
 		
 	}
 	
@@ -28,6 +29,5 @@ public class RolePermissaoId {
 	public void setEscopo_id(int escopo_id) {
 		this.escopo_id = escopo_id;
 	}
-	
 	
 }

@@ -35,9 +35,13 @@
 						th:action="${rolepermissao.id == null} ? @{/direitos/salvar} : @{/direitos/editar}"
 						id="formRolePermissao">
 						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 								<div th:replace="fragments/validacao :: validacao"></div>
 								<div th:replace="fragments/alert"></div>
+							</div>	
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
 								<div class="form-group">
 									<label for="roleid" class="control-label">Grupo</label> <select
 										id="roleid" class="form-control" th:field="*{role}">
@@ -83,31 +87,17 @@
 						</div>
 						<fieldset>
 							<legend>Permissões de Grupos</legend>
-							<div class="row">
+							<div class="row" >
 
-								<th:block th:each="permissao : ${permissoes}">
-									<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
-										<div class="form-group">
-
-											<div class="make-switch switch-large">
-												<input type="checkbox" th:value="${permissao.id}"
-													th:field="*{ListaPermissoes}" class="js-status"
-													data-group-cls="btn-group-sm" data-off-label="false"
-													data-on-label="false" data-off-icon-cls="fa fa-times"
-													data-on-icon-cls="fa fa-check" /> <label
-													th:text="${permissao.nome}"></label>
-											</div>
-										</div>
-									</div>
-
-								</th:block>
+								<div id="linhaGrupo" th:replace="fragments/rolepermissao :: role_permissao"></div>
 
 							</div>
 						</fieldset>
-
-						<input type="hidden" id="id" th:field="*{id}" /> <input
-							type="hidden" id="id_role" th:field="*{id.role_id}" /> <input
-							type="hidden" id="id_escopo" th:field="*{id.escopo_id}" />
+<!--  spring-thymeleaf-fragments-from-ajax -->
+						<input type="hidden" id="id" th:field="*{id}" /> 
+						<input type="hidden" id="id_role" th:field="*{id.role_id}" /> 
+						<input type="hidden" id="id_escopo" th:field="*{id.escopo_id}" />
+						<input type="hidden" id="id_permissao" th:field="*{id.permissao_id}" />
 
 						<div class="tile-footer">
 
@@ -153,33 +143,36 @@
 		    	});
 		    });
 		    
-		    $(document).ready(function(){
+		    /* $(document).ready(function(){
 		    	 $(function(){
 				      var $checkbox = $("#formRolePermissao input[type='checkbox']");
 				      var total;
 				      var permissaoid;
 				      $checkbox.change(function(){
-			               total = 0;
+			
 				    	   total = $checkbox.filter(':checked').length;
-				    	   total=total+1;
+
 					       for(i=1;i<=total;i++){
-						   	  if (!$('#ListaPermissoes'+i).is(':checked')){
-						   		permissaoid = $('#ListaPermissoes'+i).val();
-						   		ajax_processing(permissaoid);
+				    	      console.log(total);
+						   	  if ($('#ListaPermissoes'+i).prop('checked')==false){
+				    			
+				      
 						   	  }
-						   }
+						   }       
 				      });
 				    });
-		    });
+		    }); */
 		   
-		    
+		    /* function readCheckbox(){
+  		    	   
+		    }
 		    
 		    function ajax_processing(permissao_id){
 		    	 var token = $('#_csrf').attr('content');
 		         var header = $('#_csrf_header').attr('content');
 		    	 var role_id = $('#id_role').val();
 		    	 var escopo_id = $('#id_escopo').val();
-		    	 var url = 'http://localhost:8080/rolepermissao/excluir';
+		    	 var url = '/rolepermissao/excluir';
 		    	 var json = {
 		    			 'permissao_id': permissao_id,
 		    			 'role_id'     : role_id,
@@ -195,15 +188,20 @@
 		    	        	xhr.setRequestHeader(header, token);
 		    	        },
 		    	        success: function(data) {
+		    	        	readCheckbox()	;
 		    	        },
 		    	        error: function(error) {
-		    	        	console.log("the error object" + error);
-		    				alert("Submit failed" + JSON.stringify(error));
+		    	        	readCheckbox();
 		    	        },
 		    	    });
+		    	 return;
 		    	
 		    };
 		    
+		    function loadFragementsPermissao(){
+		    	console.log("carregando fragmento");
+		    	$("#linhaGrupo").load('/rolepermissao/fragments');
+		    }; */ 
 		     
 	    </script>
 	</th:block>

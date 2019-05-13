@@ -1,6 +1,8 @@
 package com.financeiro.service.impl;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.validation.ReportAsSingleViolation;
 
@@ -56,9 +58,19 @@ public class RolePermissaoServiceImpl implements RolePermissaoService {
 	@Override
  	@Secured("hasRole('ROLE_ADMINISTRADOR')")
 	@PreAuthorize("hasPermission('cadastro_direitos','exclusao')")
-	public void delete(RolePermissaoId id) {
-		RolePermissao rolePermissao = findById(id);
-		rolePermissaoRepository.delete(rolePermissao);
+	public boolean delete(RolePermissaoId id) {
+		System.out.println("entrando no metodo");
+		
+		Optional<RolePermissao> rolePermissao = rolePermissaoRepository.findById(id);
+		
+		System.out.println(rolePermissao.toString());
+		
+		if (rolePermissao.isPresent()) {
+			System.out.println("passando pelo if");
+		    rolePermissaoRepository.deleteById(id);
+		    return true;
+		}
+		return false;
 	}
 
 	@Override

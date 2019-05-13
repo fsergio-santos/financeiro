@@ -20,7 +20,7 @@ public interface RolePermissaoService {
 
 	RolePermissao salvar(RolePermissaoId id, RolePermissao role);
 
-	void delete(RolePermissaoId id);
+	boolean delete(RolePermissaoId id);
 	
 	Page<RolePermissao> listRolePermissaoWithPagination(RolePermissaoFiltro rolePermissaoFiltro, Pageable pageable);
 	

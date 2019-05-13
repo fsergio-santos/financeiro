@@ -1,8 +1,10 @@
 package com.financeiro.web.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -29,6 +31,7 @@ import com.financeiro.model.security.Permissao;
 import com.financeiro.model.security.Role;
 import com.financeiro.model.security.RolePermissao;
 import com.financeiro.model.security.RolePermissaoId;
+import com.financeiro.repository.RolePermissaoRepository;
 import com.financeiro.repository.filtros.RolePermissaoFiltro;
 import com.financeiro.service.EscopoService;
 import com.financeiro.service.PermissaoService;
@@ -52,6 +55,8 @@ public class RolePermissaoController {
 	@Autowired
 	private EscopoService escopoService;
 	
+	private List<Permissao> listaPermissao;
+	
 	@InitBinder
     protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -65,9 +70,16 @@ public class RolePermissaoController {
 		return "/direitos/lista";
 	}
 	
-	@RequestMapping(value="/cadastrar")
-	public ModelAndView cadastrarRolePermissao(ListaRolePermissao rolepermissao) {
-		ModelAndView mv = new ModelAndView("/direitos/cadastro");
+	@RequestMapping(value="/incluir")
+	public ModelAndView incluirRolePermissao(ListaRolePermissao rolepermissao) {
+		ModelAndView mv = new ModelAndView("/direitos/incluir");
+		mv.addObject("rolepermissao",rolepermissao);
+		return mv;
+	}
+	
+	@RequestMapping(value="/alterar")
+	public ModelAndView alterarRolePermissao(ListaRolePermissao rolepermissao) {
+		ModelAndView mv = new ModelAndView("/direitos/alterar");
 		mv.addObject("rolepermissao",rolepermissao);
 		return mv;
 	}
@@ -75,17 +87,16 @@ public class RolePermissaoController {
 	@RequestMapping(value="/salvar", method=RequestMethod.POST,params="action=salvar")
 	public ModelAndView salvar(@Valid ListaRolePermissao rolepermissao, BindingResult result,  RedirectAttributes attr) {
 		if (result.hasErrors()) {
-			return cadastrarRolePermissao(rolepermissao);
+			return incluirRolePermissao(rolepermissao);
 		}
 		registrarRolePermissao(rolepermissao);
-		ModelAndView mv = new ModelAndView("/direitos/cadastro");
+		ModelAndView mv = new ModelAndView("/direitos/incluir");
 		ListaRolePermissao rolePermissao = new ListaRolePermissao();
 		mv.addObject("success", "Registro inserido com sucesso.");
 		mv.addObject("rolepermissao", rolePermissao);
 		return mv;
 	}
 
-	
 
 	@RequestMapping(value="/editar/{permissao_id}/{role_id}/{escopo_id}", method=RequestMethod.GET)
 	public String editar(@PathVariable("permissao_id") Integer permissao_id, 
@@ -93,18 +104,41 @@ public class RolePermissaoController {
 			             @PathVariable("escopo_id") Integer escopo_id, ModelMap model) {
 		ListaRolePermissao rolepermissao = new ListaRolePermissao();
 		rolepermissao = rolePermissaoService.findByRolePermissao(role_id, escopo_id);
+		listaPermissao = new ArrayList<>();
+		for (Permissao lista: rolepermissao.getListaPermissoes()) {
+			listaPermissao.add(lista);
+		}
 		model.addAttribute("rolepermissao", rolepermissao);
-		return "/direitos/cadastro";
+		return "/direitos/alterar";
 	}
 	
 	@RequestMapping(value="/editar", method=RequestMethod.POST, params="action=salvar")
-	public ModelAndView editarRolePermissao(ListaRolePermissao rolepermissao, BindingResult result, RedirectAttributes attr) {
+	public ModelAndView editarRolePermissao(ListaRolePermissao rolepermissao, RedirectAttributes attr) {
 		/*if (result.hasErrors()) {
-			return cadastrarRolePermissao(rolepermissao);
+			return altararRolePermissao(rolepermissao);
 		}*/
-		registrarRolePermissao(rolepermissao);
-		ModelAndView model = new ModelAndView("/direitos/cadastro");
+		ModelAndView model = new ModelAndView("/direitos/alterar");
 		model.addObject("success","Resgistro alterado com sucesso.");
+		if (!Objects.isNull(listaPermissao)) {
+			if ( rolepermissao.getListaPermissoes().size() < listaPermissao.size()) {
+				for ( int i = 0 ; i < listaPermissao.size(); i++) {
+					Permissao permissao = listaPermissao.get(i);
+					if (!rolepermissao.getListaPermissoes().contains(permissao)) {
+						RolePermissaoId id = new RolePermissaoId();
+				        id.setRole_id(rolepermissao.getId().getRole_id());
+				        id.setEscopo_id(rolepermissao.getId().getEscopo_id());
+				        id.setPermissao_id(permissao.getId());
+	
+				        rolePermissaoService.delete(id);
+				        
+					}
+				}
+			}else {
+				registrarRolePermissao(rolepermissao);
+			}
+		}
+		rolepermissao = rolePermissaoService.findByRolePermissao(rolepermissao.getId().getRole_id(), rolepermissao.getId().getEscopo_id());
+		model.addObject("rolepermissao", rolepermissao);
 		return model;
 	}
 	
@@ -165,7 +199,6 @@ public class RolePermissaoController {
 	private void registrarRolePermissao(ListaRolePermissao rolepermissao) {
 		RolePermissaoId rpId = new RolePermissaoId();
 		for ( Permissao permissao :rolepermissao.getListaPermissoes()) {
-			 System.out.println(permissao.toString());
 			 rpId.setPermissao_id(permissao.getId());
 			 rpId.setRole_id(rolepermissao.getRole().getId());
 			 rpId.setEscopo_id(rolepermissao.getScope().getId());

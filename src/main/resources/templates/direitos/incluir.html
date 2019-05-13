@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:data="http://www.thymeleaf.org/extras/data"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap-switch.min.css}">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header"
+	th:content="${_csrf.headerName}" />
+</head>
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Cadastro de Permissões por Grupos
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+				<li class="breadcrumb-item"><a th:href="@{/direitos/pesquisar}">Pesquisa
+						Grupos Permissões</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="tile">
+				<h3 class="tile-title">Registro</h3>
+				<div class="tile-body">
+					<form class="form-horizontal" th:object="${rolepermissao}"
+						method="POST"
+						th:action="${rolepermissao.id == null} ? @{/direitos/salvar} : @{/direitos/editar}"
+						id="formRolePermissao">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+								<div th:replace="fragments/validacao :: validacao"></div>
+								<div th:replace="fragments/alert"></div>
+							</div>	
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+								<div class="form-group">
+									<label for="roleid" class="control-label">Grupo</label> <select
+										id="roleid" class="form-control" th:field="*{role}">
+										<option value="">Selecione o grupo de usuários</option>
+										<option th:each="role : ${roles}" th:value="${role.id}"
+											th:text="${role.nome}"
+											th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
+										</option>
+									</select>
+									<div class="invalid-feedback">
+										<span th:errors="*{role}"></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+								<div class="form-group">
+									<label for="escopoId" class="control-label">Escopo</label> <select
+										id="escopoId" class="form-control" th:field="*{scope}">
+										<option value="">Selecione o escopo para as
+											permissões</option>
+										<option th:each="escopo : ${scopes}" th:value="${escopo.id}"
+											th:text="${escopo.nome}"
+											th:classappend="${#fields.hasErrors('scope')} ? 'is-invalid'">
+										</option>
+									</select>
+									<div class="invalid-feedback">
+										<span th:errors="*{scope}"></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+								<div class="form-group">
+									<label for="dataCadastro" class="control-label">Data
+										Cadastro</label> <input type="text" id="dataCadastro"
+										class="form-control" placeholder="99/99/9999"
+										name="dataCadastro" th:field="*{dataCadastro}"
+										th:classappend="${#fields.hasErrors('dataCadastro')} ? 'is-invalid'" />
+									<div class="invalid-feedback">
+										<span th:errors="*{dataCadastro}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<fieldset>
+							<legend>Permissões de Grupos</legend>
+							<div class="row" >
+
+								<div id="linhaGrupo" th:replace="fragments/rolepermissao :: role_permissao"></div>
+
+							</div>
+						</fieldset>
+<!--  spring-thymeleaf-fragments-from-ajax -->
+						<input type="hidden" id="id" th:field="*{id}" /> 
+						<input type="hidden" id="id_role" th:field="*{id.role_id}" /> 
+						<input type="hidden" id="id_escopo" th:field="*{id.escopo_id}" />
+						<input type="hidden" id="id_permissao" th:field="*{id.permissao_id}" />
+
+						<div class="tile-footer">
+
+							<div class="col-lg-offset-2 col-md-offset-2">
+								<button type="submit" class="btn btn-primary " name="action"
+									value="salvar" data-toggle="tooltip" data-placement="top"
+									title="Salvar o cadastro de um novo registro">
+									<b>Salvar</b> <span class="fa fa-fw fa-lg fa-check-circle"
+										aria-hidden="true"></span>
+								</button>
+
+								<button type="submit" class="btn btn-secondary " name="action"
+									value="cancelar" data-toggle="tooltip"
+									formnovalidate="formnovalidate" data-placement="top"
+									title="Cancelar o cadastro de um novo registro">
+									<b>Cancelar</b> <span class="fa fa-fw fa-lg fa-times-circle"
+										aria-hidden="true"></span>
+								</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/js/bootstrap-checkbox.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-datepicker.pt-BR.min.js}"></script>
+
+		<script>
+			$(':checkbox').checkboxpicker();
+	    </script>
+		<script>
+		    $(function(){
+		    	$('#dataCadastro').mask('00/00/0000');
+		    	$('#dataCadastro').datepicker({
+		    		orientation: 'bottom',
+		    		language: 'pt-BR',
+		    		autoclose: true,
+		    		todayHighlight: true
+		    	});
+		    });
+		    
+		    /* $(document).ready(function(){
+		    	 $(function(){
+				      var $checkbox = $("#formRolePermissao input[type='checkbox']");
+				      var total;
+				      var permissaoid;
+				      $checkbox.change(function(){
+			
+				    	   total = $checkbox.filter(':checked').length;
+
+					       for(i=1;i<=total;i++){
+				    	      console.log(total);
+						   	  if ($('#ListaPermissoes'+i).prop('checked')==false){
+				    			
+				      
+						   	  }
+						   }       
+				      });
+				    });
+		    }); */
+		   
+		    /* function readCheckbox(){
+  		    	   
+		    }
+		    
+		    function ajax_processing(permissao_id){
+		    	 var token = $('#_csrf').attr('content');
+		         var header = $('#_csrf_header').attr('content');
+		    	 var role_id = $('#id_role').val();
+		    	 var escopo_id = $('#id_escopo').val();
+		    	 var url = '/rolepermissao/excluir';
+		    	 var json = {
+		    			 'permissao_id': permissao_id,
+		    			 'role_id'     : role_id,
+		    			 'escopo_id'   : escopo_id 
+		    		 }
+		    	 $.ajax({
+		    	        url: url,
+		    	        type: 'DELETE',
+		    	        contentType: 'application/json; charset=utf-8',
+		    	        data:JSON.stringify(json),
+		    	        dataType : "json",
+		    	        beforeSend: function(xhr) {
+		    	        	xhr.setRequestHeader(header, token);
+		    	        },
+		    	        success: function(data) {
+		    	        	readCheckbox()	;
+		    	        },
+		    	        error: function(error) {
+		    	        	readCheckbox();
+		    	        },
+		    	    });
+		    	 return;
+		    	
+		    };
+		    
+		    function loadFragementsPermissao(){
+		    	console.log("carregando fragmento");
+		    	$("#linhaGrupo").load('/rolepermissao/fragments');
+		    }; */ 
+		     
+	    </script>
+	</th:block>
+</body>
+</html>

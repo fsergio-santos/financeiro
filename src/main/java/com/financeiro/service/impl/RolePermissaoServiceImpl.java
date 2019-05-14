@@ -59,14 +59,8 @@ public class RolePermissaoServiceImpl implements RolePermissaoService {
  	@Secured("hasRole('ROLE_ADMINISTRADOR')")
 	@PreAuthorize("hasPermission('cadastro_direitos','exclusao')")
 	public boolean delete(RolePermissaoId id) {
-		System.out.println("entrando no metodo");
-		
 		Optional<RolePermissao> rolePermissao = rolePermissaoRepository.findById(id);
-		
-		System.out.println(rolePermissao.toString());
-		
 		if (rolePermissao.isPresent()) {
-			System.out.println("passando pelo if");
 		    rolePermissaoRepository.deleteById(id);
 		    return true;
 		}
@@ -75,6 +69,8 @@ public class RolePermissaoServiceImpl implements RolePermissaoService {
 
 	@Override
 	@Transactional(readOnly=true)
+	@Secured("hasRole('ROLE_ADMINISTRADOR')")
+	@PreAuthorize("hasPermission('cadastro_direitos','leitura')")
 	public Page<RolePermissao> listRolePermissaoWithPagination(RolePermissaoFiltro rolePermissaoFiltro, Pageable pageable) {
 		return rolePermissaoRepository.listRolePermissionPagination(rolePermissaoFiltro, pageable);
 	}

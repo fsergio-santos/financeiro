@@ -115,7 +115,7 @@ public class RolePermissaoController {
 	@RequestMapping(value="/editar", method=RequestMethod.POST, params="action=salvar")
 	public ModelAndView editarRolePermissao(ListaRolePermissao rolepermissao, RedirectAttributes attr) {
 		/*if (result.hasErrors()) {
-			return altararRolePermissao(rolepermissao);
+			return alterarRolePermissao(rolepermissao);
 		}*/
 		ModelAndView model = new ModelAndView("/direitos/alterar");
 		model.addObject("success","Resgistro alterado com sucesso.");
@@ -128,9 +128,7 @@ public class RolePermissaoController {
 				        id.setRole_id(rolepermissao.getId().getRole_id());
 				        id.setEscopo_id(rolepermissao.getId().getEscopo_id());
 				        id.setPermissao_id(permissao.getId());
-	
 				        rolePermissaoService.delete(id);
-				        
 					}
 				}
 			}else {
@@ -146,22 +144,28 @@ public class RolePermissaoController {
 	public ModelAndView excluir(@PathVariable("permissao_id") Integer permissao_id, 
 					            @PathVariable("role_id") Integer role_id,
 					            @PathVariable("escopo_id") Integer escopo_id) {
-		RolePermissaoId rpId = new RolePermissaoId(permissao_id,role_id,escopo_id);
-		RolePermissao rolePermissao = rolePermissaoService.findById(rpId);
+		
+		ListaRolePermissao rolepermissao = new ListaRolePermissao();
+		rolepermissao = rolePermissaoService.findByRolePermissao(role_id, escopo_id);
 		ModelAndView model = new ModelAndView("/direitos/excluir");
-		model.addObject("rolePermissao", rolePermissao);
+		model.addObject("rolepermissao", rolepermissao);
 		return model;
 	}
 	
 	@RequestMapping(value="/excluir", method=RequestMethod.POST, params="action=excluir")
-	public ModelAndView excluirRolePermissao(RolePermissao rolePermissao, RedirectAttributes attr) {
-		RolePermissaoId rpId = new RolePermissaoId(rolePermissao.getPermissaoId().getId(), 
-												   rolePermissao.getRoleId().getId(),
-												   rolePermissao.getScopeId().getId());
-		rolePermissao.setId(rpId);
-		rolePermissaoService.delete(rolePermissao.getId());
+	public ModelAndView excluirRolePermissao(ListaRolePermissao rolepermissao, RedirectAttributes attr) {
+		for (Permissao permissao : rolepermissao.getListaPermissoes()) {
+			 RolePermissaoId rpId = new RolePermissaoId();
+			 rpId.setPermissao_id(permissao.getId());
+			 rpId.setRole_id(rolepermissao.getRole().getId());
+			 rpId.setEscopo_id(rolepermissao.getScope().getId());
+			 RolePermissao rolePermissao = new RolePermissao();
+			 rolePermissao.setId(rpId);
+			 rolePermissaoService.delete(rolePermissao.getId());
+		}
+		rolepermissao = new ListaRolePermissao();
 		ModelAndView model = new ModelAndView("/direitos/excluir");
-		model.addObject("success","Registro removido com sucesso.");
+		model.addObject("success","Registros removido com sucesso.");
 		return model;
 	}
 	
@@ -169,9 +173,9 @@ public class RolePermissaoController {
 	public String consulta(@PathVariable("permissao_id") Integer permissao_id, 
 				           @PathVariable("role_id") Integer role_id,
 				           @PathVariable("escopo_id") Integer escopo_id, ModelMap model) {
-		RolePermissaoId rpId = new RolePermissaoId(permissao_id,role_id,escopo_id);
-		RolePermissao rolePermissao = rolePermissaoService.findById(rpId);
-		model.addAttribute("rolePermissao", rolePermissao);
+		ListaRolePermissao rolepermissao = new ListaRolePermissao();
+		rolepermissao = rolePermissaoService.findByRolePermissao(role_id, escopo_id);
+		model.addAttribute("rolepermissao", rolepermissao);
 		return "/direitos/consultar";
 	}
 		
@@ -197,8 +201,8 @@ public class RolePermissaoController {
 	}
 	
 	private void registrarRolePermissao(ListaRolePermissao rolepermissao) {
-		RolePermissaoId rpId = new RolePermissaoId();
 		for ( Permissao permissao :rolepermissao.getListaPermissoes()) {
+			 RolePermissaoId rpId = new RolePermissaoId();
 			 rpId.setPermissao_id(permissao.getId());
 			 rpId.setRole_id(rolepermissao.getRole().getId());
 			 rpId.setEscopo_id(rolepermissao.getScope().getId());

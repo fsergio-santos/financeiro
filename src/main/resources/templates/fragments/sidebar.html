@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 <meta charset="UTF-8">
 </head>
@@ -25,7 +26,7 @@
           </ul>
         </li>
         
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Segurança</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li class="treeview" sec:authorize="hasRole('ROLE_ADMINISTRADOR')"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Segurança</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" th:href="@{/role/pesquisar}"><i class="icon fa fa-circle-o"></i>Grupo de Usuário</a></li>
             <li><a class="treeview-item" th:href="@{/permissao/pesquisar}"><i class="icon fa fa-circle-o"></i>Permissões de Usuário</a></li>
@@ -34,7 +35,7 @@
             <li><a class="treeview-item" th:href="@{/direitos/pesquisar}"><i class="icon fa fa-circle-o"></i> Direitos de Acesso</a></li>
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-key"></i><span class="app-menu__label">Alterar Senha</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li class="treeview" sec:authorize="hasRole('ROLE_ADMINISTRADOR') and hasRole('ROLE_USUARIO')"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-key"></i><span class="app-menu__label">Alterar Senha</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" th:href="@{/trocar/senha}"><i class="icon fa fa-circle-o"></i>Trocar Senha</a></li>
           </ul>

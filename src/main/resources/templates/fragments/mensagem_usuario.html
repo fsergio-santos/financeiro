@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"></head>
+<body>
+
+	<div th:fragment="mensagem_usuario">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+			<div th:replace="fragments/validacao :: validacao"></div>
+			<div th:replace="fragments/alert"></div>
+		</div>
+	</div>
+
+</body>
+</html>

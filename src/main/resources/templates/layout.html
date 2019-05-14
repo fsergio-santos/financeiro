@@ -20,7 +20,7 @@
 	<aside>
 		<nav th:replace="fragments/sidebar :: nav-sidebar"></nav>
 	</aside>
-	<div class="app-content">
+	<div class="app-content" sec:authorize="isAuthenticated()">
 		<section layout:fragment="corpo"></section>
 	</div>
 

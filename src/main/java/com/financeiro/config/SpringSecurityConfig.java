@@ -47,52 +47,44 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-        	.authorizeRequests()
-        	    .antMatchers("/resources/**","/js/**","/static/**","/css/**","/images/**").permitAll() 
-	            .antMatchers("/").permitAll()
-	            .antMatchers("/login").permitAll()
-	            .antMatchers("/registrar/**").permitAll()
-	            .antMatchers("/recuperar/**").permitAll()
-	            .antMatchers("/rolepermissao/**").permitAll()
-	            .antMatchers("/pessoa/**").hasAnyRole("ADMINISTRADOR","USUARIO","VISITANTE")
-	            .antMatchers("/telefone/**").hasAnyRole("ADMINISTRADOR","USUARIO","VISITANTE")
-	            .antMatchers("/trocar/**").hasAnyAuthority("ADMINISTRADOR","USUARIO","VISITANTE")
-			    .antMatchers("/usuario/**").hasRole("ADMINISTRADOR")
-			    .antMatchers("/permissao/**").hasRole("ADMINISTRADOR")
-			    .antMatchers("/role/**").hasRole("ADMINISTRADOR")
-			    .antMatchers("/direitos/**").hasRole("ADMINISTRADOR")
-	            .anyRequest()
-	            .authenticated()
-	            .and()
-	        .formLogin()
-                .loginPage("/login")
-                .failureUrl("/login?error=false")
-                /*.defaultSuccessUrl("/home",true)*/
-                .usernameParameter("email")
-                .passwordParameter("password")
-   			 	.successHandler(successHandler)
-                .permitAll()
-                .and()
-             .logout()
-             	.logoutUrl("/login")
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				.deleteCookies("JSESSIONID")
-				.invalidateHttpSession(true)
-				.clearAuthentication(true)
-             	.and()
-             .exceptionHandling()
-                .accessDeniedPage("/403")
-                .and()
-             .sessionManagement()
-			 	.invalidSessionUrl("/login")
-			 	.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-			 	.maximumSessions(1).sessionRegistry(sessionRegistry()).and()
-		        .sessionFixation().none()
-			    .and()
-             .csrf()
-             	.and()
-             .cors();
+        http.authorizeRequests()
+        	.antMatchers("/resources/**","/js/**","/static/**","/css/**","/images/**").permitAll() 
+	        .antMatchers("/").permitAll()
+	        .antMatchers("/login").permitAll()
+	        .antMatchers("/registrar/**").permitAll()
+	        .antMatchers("/recuperar/**").permitAll()
+	        .antMatchers("/pessoa/**").hasAnyRole("ADMINISTRADOR","USUARIO","VISITANTE")
+	        .antMatchers("/telefone/**").hasAnyRole("ADMINISTRADOR","USUARIO","VISITANTE")
+	        .antMatchers("/trocar/**").hasAnyAuthority("ADMINISTRADOR","USUARIO")
+			.antMatchers("/usuario/**").hasRole("ADMINISTRADOR")
+			.antMatchers("/permissao/**").hasRole("ADMINISTRADOR")
+			.antMatchers("/role/**").hasRole("ADMINISTRADOR")
+			.antMatchers("/direitos/**").hasRole("ADMINISTRADOR")
+	        .anyRequest()
+	        .authenticated();
+	    http.formLogin()
+            .loginPage("/login")
+            .failureUrl("/login?error=false")
+          /*.defaultSuccessUrl("/home",true)*/
+            .usernameParameter("email")
+            .passwordParameter("password")
+   			.successHandler(successHandler)
+            .permitAll();
+        http.logout()
+            .logoutUrl("/login")
+		    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			.deleteCookies("JSESSIONID")
+			.invalidateHttpSession(true)
+			.clearAuthentication(true);
+        http.exceptionHandling()
+            .accessDeniedPage("/403");
+        http.sessionManagement()
+  		    .invalidSessionUrl("/login")
+			.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+			.maximumSessions(1).sessionRegistry(sessionRegistry()).and()
+		    .sessionFixation().none();
+		http.csrf();
+        http.cors();
     }
     
 

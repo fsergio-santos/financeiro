@@ -32,13 +32,10 @@
 				<div class="tile-body">
 					<form class="form-horizontal" th:object="${rolepermissao}"
 						method="POST"
-						th:action="${rolepermissao.id == null} ? @{/direitos/salvar} : @{/direitos/editar}"
+						th:action="@{/direitos/salvar}"
 						id="formRolePermissao">
 						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-								<div th:replace="fragments/validacao :: validacao"></div>
-								<div th:replace="fragments/alert"></div>
-							</div>	
+							<div id="mensagem" th:replace="fragments/mensagem_usuario :: mensagem_usuario"></div>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
@@ -143,66 +140,7 @@
 		    	});
 		    });
 		    
-		    /* $(document).ready(function(){
-		    	 $(function(){
-				      var $checkbox = $("#formRolePermissao input[type='checkbox']");
-				      var total;
-				      var permissaoid;
-				      $checkbox.change(function(){
-			
-				    	   total = $checkbox.filter(':checked').length;
-
-					       for(i=1;i<=total;i++){
-				    	      console.log(total);
-						   	  if ($('#ListaPermissoes'+i).prop('checked')==false){
-				    			
-				      
-						   	  }
-						   }       
-				      });
-				    });
-		    }); */
-		   
-		    /* function readCheckbox(){
-  		    	   
-		    }
-		    
-		    function ajax_processing(permissao_id){
-		    	 var token = $('#_csrf').attr('content');
-		         var header = $('#_csrf_header').attr('content');
-		    	 var role_id = $('#id_role').val();
-		    	 var escopo_id = $('#id_escopo').val();
-		    	 var url = '/rolepermissao/excluir';
-		    	 var json = {
-		    			 'permissao_id': permissao_id,
-		    			 'role_id'     : role_id,
-		    			 'escopo_id'   : escopo_id 
-		    		 }
-		    	 $.ajax({
-		    	        url: url,
-		    	        type: 'DELETE',
-		    	        contentType: 'application/json; charset=utf-8',
-		    	        data:JSON.stringify(json),
-		    	        dataType : "json",
-		    	        beforeSend: function(xhr) {
-		    	        	xhr.setRequestHeader(header, token);
-		    	        },
-		    	        success: function(data) {
-		    	        	readCheckbox()	;
-		    	        },
-		    	        error: function(error) {
-		    	        	readCheckbox();
-		    	        },
-		    	    });
-		    	 return;
-		    	
-		    };
-		    
-		    function loadFragementsPermissao(){
-		    	console.log("carregando fragmento");
-		    	$("#linhaGrupo").load('/rolepermissao/fragments');
-		    }; */ 
-		     
+		  
 	    </script>
 	</th:block>
 </body>

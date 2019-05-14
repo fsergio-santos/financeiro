@@ -26,62 +26,47 @@
 				<h3 class="tile-title">Registro</h3>
 				<div class="tile-body">
 				<form class="form-horizontal" 
-					      th:object="${rolePermissao}" method="POST"
+					      th:object="${rolepermissao}" method="POST"
 						  th:action="@{/direitos/excluir}">
 						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-								<div th:replace="fragments/alert"></div>
+							<div id="mensagem" th:replace="fragments/mensagem_usuario :: mensagem_usuario"></div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
 								<div class="form-group">
-									<label for="roleid" class="control-label">Grupo</label>
-									<select id="roleid" class="form-control" th:field="*{roleId}"> 
+									<label for="roleid" class="control-label">Grupo</label> <select
+										id="roleid" class="form-control" th:field="*{role}">
 										<option value="">Selecione o grupo de usuários</option>
-										<option th:each="role : ${roles}"
-												th:value="${role.id}" th:text="${role.nome}"
-												th:classappend="${#fields.hasErrors('roleId')} ? 'is-invalid'" >
-										</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-								<div class="form-group">
-									<label for="permissaoId" class="control-label">Permissão</label>
-									<select id="permissaoId" class="form-control" th:field="*{permissaoId}"> 
-										<option value="">Selecione as permissões para o grupo</option>
-										<option th:each="permissao : ${permissoes}"
-												th:value="${permissao.id}" th:text="${permissao.nome}"
-												th:classappend="${#fields.hasErrors('permissaoId')} ? 'is-invalid'" >
+										<option th:each="role : ${roles}" th:value="${role.id}"
+											th:text="${role.nome}"
+											th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
 										</option>
 									</select>
 									<div class="invalid-feedback">
-										<span th:errors="*{permissaoId}"></span>
+										<span th:errors="*{role}"></span>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
 								<div class="form-group">
-									<label for="escopoId" class="control-label">Escopo</label>
-									<select id="escopoId" class="form-control" th:field="*{scopeId}"> 
-										<option value="">Selecione o escopo para as permissões</option>
-										<option th:each="escopo : ${scopes}"
-												th:value="${escopo.id}" th:text="${escopo.nome}"
-												th:classappend="${#fields.hasErrors('scopeId')} ? 'is-invalid'" >
+									<label for="escopoId" class="control-label">Escopo</label> <select
+										id="escopoId" class="form-control" th:field="*{scope}">
+										<option value="">Selecione o escopo para as
+											permissões</option>
+										<option th:each="escopo : ${scopes}" th:value="${escopo.id}"
+											th:text="${escopo.nome}"
+											th:classappend="${#fields.hasErrors('scope')} ? 'is-invalid'">
 										</option>
 									</select>
 									<div class="invalid-feedback">
-										<span th:errors="*{scopeId}"></span>
+										<span th:errors="*{scope}"></span>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-				   			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"> 
-									<div class="form-group">
+							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+								<div class="form-group">
 									<label for="dataCadastro" class="control-label">Data
-										Cadastro</label> <input type="date" id="dataCadastro"
+										Cadastro</label> <input type="text" id="dataCadastro"
 										class="form-control" placeholder="99/99/9999"
 										name="dataCadastro" th:field="*{dataCadastro}"
 										th:classappend="${#fields.hasErrors('dataCadastro')} ? 'is-invalid'" />
@@ -92,49 +77,14 @@
 							</div>
 						</div>
 						<fieldset>
-							<legend>Direitos de Acesso</legend>
-							<div class="row">
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-									<div class="form-group "
-										th:classappend="${#fields.hasErrors('right_read')} ? has-error">
-										<label for="right_read" class="control-label">Leitura</label>
-										<div class="make-switch switch-large">
-											<input type="checkbox" class="js-status" id="right_read"
-												data-off-color="danger"
-												data-on-text="<i class='fa fa-check'></i>"
-												data-off-text="<i class='fa fa-times'></i>"
-												th:field="*{right_read}" />
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-									<div class="form-group"
-										th:classappend="${#fields.hasErrors('right_write')} ? has-error">
-										<label for="right_write" class="control-label">Escrita</label>
-										<div class="make-switch switch-large">
-											<input type="checkbox" class="js-status" id="right_write"
-												data-off-color="danger"
-												data-on-text="<i class='fa fa-check'></i>"
-												data-off-text="<i class='fa fa-times'></i>"
-												th:field="*{right_write}" />
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
-									<div class="form-group"
-										th:classappend="${#fields.hasErrors('right_delete')} ? has-error">
-										<label for="right_delete" class="control-label">Excluir</label>
-										<div class="make-switch switch-large">
-											<input type="checkbox" class="js-status" id="right_delete"
-												data-off-color="danger"
-												data-on-text="<i class='fa fa-check'></i>"
-												data-off-text="<i class='fa fa-times'></i>"
-												th:field="*{right_delete}" />
-										</div>
-									</div>
-								</div>
+							<legend>Permissões de Grupos</legend>
+							<div class="row" >
+
+								<div id="linhaGrupo" th:replace="fragments/rolepermissao :: role_permissao"></div>
+
 							</div>
 						</fieldset>
+
 						<input type="hidden" id="id" th:field="*{id}" />
 						<div class="tile-footer">
 
@@ -162,10 +112,25 @@
 		</div>
 	</section>
 	<th:block layout:fragment="javascript-extra">
-  		<script th:src="@{/js/bootstrap-switch.min.js}"></script>
+	
+		<script th:src="@{/js/bootstrap-checkbox.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-datepicker.pt-BR.min.js}"></script>
+
 		<script>
-			$('.js-status').bootstrapSwitch();
+			$(':checkbox').checkboxpicker();
 	    </script>
+		<script>
+		    $(function(){
+		    	$('#dataCadastro').mask('00/00/0000');
+		    	$('#dataCadastro').datepicker({
+		    		orientation: 'bottom',
+		    		language: 'pt-BR',
+		    		autoclose: true,
+		    		todayHighlight: true
+		    	});
+		    });
+		</script>    
     </th:block>
 </body>
 </html>

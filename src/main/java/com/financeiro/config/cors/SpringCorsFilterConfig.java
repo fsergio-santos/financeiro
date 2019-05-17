@@ -1,4 +1,4 @@
-package com.financeiro.config;
+package com.financeiro.config.cors;
 
 import java.io.IOException;
 

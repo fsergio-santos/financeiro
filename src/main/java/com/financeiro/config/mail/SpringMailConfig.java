@@ -1,4 +1,4 @@
-package com.financeiro.config;
+package com.financeiro.config.mail;
 
 import java.util.Properties;
 

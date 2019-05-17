@@ -2,6 +2,8 @@ package com.financeiro.security;
 
 import java.util.Objects;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,9 +20,20 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     @Autowired
     private UserService userService;
     
+    @Autowired
+    private HttpServletRequest request;
+    
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+    
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    	
+    	 final String ip = getClientIP();
+         if (loginAttemptService.isBlocked(ip)) {
+             throw new RuntimeException("blocked");
+         }
 
         Usuario usuario = findUserByUsername(username);
         
@@ -40,6 +53,15 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
 	private Usuario findUserByUsername(String username) {
     	return userService.buscarUserAtivoByEmail(username);
+    }
+	
+	
+	private final String getClientIP() {
+        final String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
     }
     
     

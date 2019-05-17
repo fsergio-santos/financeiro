@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,11 +16,20 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
-import com.financeiro.security.AuthenticationSuccessHandlerImpl;
+import com.financeiro.config.csrf.CookieCsrfFilter;
 import com.financeiro.security.UserDetailsServiceImpl;
+import com.financeiro.security.custom.CustomAccessDeniedHandler;
+import com.financeiro.security.custom.CustomAuthenticationFailureHandler;
+import com.financeiro.security.custom.CustomAuthenticationProvider;
+import com.financeiro.security.custom.CustomAuthenticationSuccessHandler;
+import com.financeiro.security.custom.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -30,19 +40,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
 	@Autowired
-    private AuthenticationSuccessHandlerImpl successHandler;
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 	
-    /*@Autowired
-    private DataSource dataSource;*/
+	@Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+	
+	@Autowired
+	private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+	
+	@Autowired
+	private CustomAccessDeniedHandler customAccessDaniedHandler;
 	
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      	 auth.userDetailsService(userDetailsService)
-      	     .passwordEncoder(passwordEncoder());
-	  /*    	 .and()
-	     auth.authenticationProvider(authenticationProvider())
-	         .jdbcAuthentication()
-	         .dataSource(dataSource);*/
+        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+      	auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
@@ -64,29 +76,40 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	        .authenticated();
 	    http.formLogin()
             .loginPage("/login")
-            .failureUrl("/login?error=false")
-          /*.defaultSuccessUrl("/home",true)*/
+          /*.failureUrl("/login?error=false")
+            .defaultSuccessUrl("/home",true)*/
             .usernameParameter("email")
             .passwordParameter("password")
-   			.successHandler(successHandler)
+   			.successHandler(customAuthenticationSuccessHandler)
+   		    .failureHandler(customAuthenticationFailureHandler)
             .permitAll();
         http.logout()
+        	.logoutSuccessHandler(customLogoutSuccessHandler)
             .logoutUrl("/login")
 		    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 			.deleteCookies("JSESSIONID")
 			.invalidateHttpSession(true)
 			.clearAuthentication(true);
         http.exceptionHandling()
-            .accessDeniedPage("/403");
+        	.accessDeniedHandler(customAccessDaniedHandler);
+//            .accessDeniedPage("/403");
         http.sessionManagement()
   		    .invalidSessionUrl("/login")
 			.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 			.maximumSessions(1).sessionRegistry(sessionRegistry()).and()
 		    .sessionFixation().none();
-		http.csrf();
+		http.csrf()
+		 	.csrfTokenRepository(csrfTokenRepository())
+		 	.and()
+		 	.addFilterAfter(new CookieCsrfFilter(), CsrfFilter.class);
         http.cors();
     }
     
+    private CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName(CookieCsrfFilter.XSRF_TOKEN_HEADER_NAME);
+        return repository;
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -104,12 +127,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder(); 
 	}
     
-    /*@Bean
+    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }*/
+        final CustomAuthenticationProvider customAuthenticationProvider = new CustomAuthenticationProvider();
+        customAuthenticationProvider.setUserDetailsService(userDetailsService);
+        customAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return customAuthenticationProvider;
+    }    
 
  }

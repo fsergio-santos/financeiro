@@ -12,12 +12,13 @@ Templates html - Vali Admin - https://github.com/pratikborsadiya/vali-admin
 
 Bootstrap - https://getbootstrap.com/
 
-https://www.baeldung.com/
+https://www.baeldung.com/ bloqueios de ip customização spring security
 
 eGov  SmartCity eGovernance suite aims to improve the internal efficiency,transparency,
  *    accountability and the service delivery of the government  organizations.
- 
-https://github.com/egovernments/egov-smartcity-suite/tree/master/egov
 
+bloqueio de usuários - https://github.com/egovernments/egov-smartcity-suite/tree/master/egov
+
+customização do csrf - https://github.com/yugzan/csrf-demo
 
 

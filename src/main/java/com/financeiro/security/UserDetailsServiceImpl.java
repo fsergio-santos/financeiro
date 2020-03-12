@@ -30,6 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     	
+    	 System.out.println("entrando no userdetails");
     	 final String ip = getClientIP();
          if (loginAttemptService.isBlocked(ip)) {
              throw new RuntimeException("blocked");
@@ -38,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         Usuario usuario = findUserByUsername(username);
         
         if ( Objects.isNull(usuario)) {
-        	 
+        	 System.out.println("erro de validação");
         	 throw new UsernameNotFoundException("Usuário não encontrado!  "+username);
         }
         

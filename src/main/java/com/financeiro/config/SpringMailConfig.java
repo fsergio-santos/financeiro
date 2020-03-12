@@ -1,4 +1,4 @@
-package com.financeiro.config.mail;
+package com.financeiro.config;
 
 import java.util.Properties;
 
@@ -20,8 +20,8 @@ public class SpringMailConfig {
 		
 		emailSender.setHost("smtp.gmail.com");
 		emailSender.setPort(587);
-		emailSender.setUsername("");
-		emailSender.setPassword("");
+		emailSender.setUsername("fsergio.santos@gmail.com");
+		emailSender.setPassword("mks18mks");
 		
 		Properties props = new Properties();
 		props.put("mail.smtp.starttls.enable", "true");
